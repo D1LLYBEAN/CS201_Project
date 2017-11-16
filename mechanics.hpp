@@ -8,7 +8,7 @@
 // Liam Eberhart
 // Dillon Mills
 //
-// Essential gameplay functions
+// Essential gameplay functions header
 
 // I don't remember what needs to be included here (if anything)
 

@@ -11,6 +11,7 @@
 // Initializes game.
 
 
+//Standard Libraries
 #include <iostream>
 using std::cout;
 using std::endl;
@@ -18,8 +19,10 @@ using std::endl;
 using std::string;
 #include <fstream>
 using std::ifstream;
-#include <conio.h>
-#include <stdlib.h>
+#include <conio.h>      // for getch()
+#include <stdlib.h>     // for System("CLS")
+//User Libraries
+#include "game.hpp"
 
 
 int main()
@@ -58,9 +61,7 @@ int main()
         if (key == 0x000D) {break;}
     }
 
-    system("CLS");
-
-    cout << "There's nothing here yet!\n";
+    startGame();
 
     return 0;
 }
