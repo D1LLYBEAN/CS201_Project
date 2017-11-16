@@ -17,8 +17,10 @@
 // requires "target" grid space to be open
 // depends on input direction (Up/Down/Left/Right)
 // updates player/enemy struct, and updates grid vector
-bool moveChar()
+bool moveChar(Position pos, int dir)
 {
+    switch(dir)
+    case 0: // North
     //...
     return true; // if player or enemy successfully moves to new spot
 }
@@ -27,5 +29,6 @@ bool moveChar()
 // based on attacker and defender stats?
 void attack()
 {
+    defender.health -= attacker.attackpower / defender.armor
     //...
 }
