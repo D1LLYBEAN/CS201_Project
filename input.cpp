@@ -1,4 +1,4 @@
-// main.cpp
+// input.cpp
 //
 // CS201_Project
 // Videogame

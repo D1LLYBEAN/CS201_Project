@@ -58,7 +58,7 @@ int main()
     while (true)
     {
         short key = getKey();
-        if (key == 0x000D) {break;} // keymap["ENTER"]
+        if (key == 0x000D) {break;} // keyMap["ENTER"]
     }
 
     startGame();

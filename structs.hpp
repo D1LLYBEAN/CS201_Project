@@ -10,6 +10,11 @@
 //
 // contains important structs
 
+
+#ifndef STRUCTS_H
+#define STRUCTS_H
+
+
 struct Position{
     int x;
     int y;
@@ -26,3 +31,6 @@ struct Enemy{
     Position pos;
     //...
 };
+
+
+#endif // STRUCTS_H
