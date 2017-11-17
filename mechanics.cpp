@@ -27,8 +27,9 @@ bool moveChar(Position pos, int dir)
 
 // applies damage to target
 // based on attacker and defender stats?
-void attack()
+void attack(auto attacker, auto defender)
 {
-    defender.health -= attacker.attackpower / defender.armor
+    defender.health -= 1.0;
+    //defender.health -= attacker.attackpower / defender.armor
     //...
 }

@@ -11,7 +11,7 @@
 // Initializes game.
 
 
-//Standard Libraries
+// Standard Libraries
 #include <iostream>
 using std::cout;
 using std::endl;
@@ -21,14 +21,19 @@ using std::string;
 using std::ifstream;
 #include <conio.h>      // for getch()
 #include <stdlib.h>     // for System("CLS")
-//User Libraries
+// Custom Libraries
 #include "game.hpp"
+#include "input.hpp"
 
 
 int main()
 {
+    string file_path = __FILE__;
+    string dir_path = file_path.substr(0, file_path.rfind("\\"));
+    string startScreenFile = dir_path + "\\StartScreen.txt";
+    cout << startScreenFile << endl;
     // This should be moved to it's own graphics.cpp/.hpp files!
-    ifstream iFile("StartScreen.txt"); // needs to be in local project file?
+    ifstream iFile(startScreenFile); // needs to be in local project file?
     string lines;
     while (true)
     {
@@ -52,13 +57,8 @@ int main()
     // This will also need its own input.cpp/.hpp files!
     while (true)
     {
-        char key = getch();
-        if (key == 0x00 || key == 0xE0)
-        {
-            key *= 0x0100; // shift left by 8 bits to get extended code
-            key += getch(); // retrieve second byte of extended code
-        }
-        if (key == 0x000D) {break;}
+        short key = getKey();
+        if (key == 0x000D) {break;} // keymap["ENTER"]
     }
 
     startGame();

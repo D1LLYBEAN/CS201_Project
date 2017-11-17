@@ -14,7 +14,7 @@
 #include <iostream>
 using std::cout;
 #include <stdlib.h>
-// User Libraries
+// Custom Libraries
 //#include "makeMap.hpp"
 #include "game.hpp"
 
