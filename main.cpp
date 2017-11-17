@@ -19,8 +19,8 @@ using std::endl;
 using std::string;
 #include <fstream>
 using std::ifstream;
-#include <conio.h>      // for getch()
-#include <stdlib.h>     // for System("CLS")
+//#include <conio.h>      // for getch()
+//#include <stdlib.h>     // for System("CLS")
 // Custom Libraries
 #include "game.hpp"
 #include "input.hpp"
@@ -28,6 +28,8 @@ using std::ifstream;
 
 int main()
 {
+    cout << "Font: Courier New (14 pt)\n";
+    cout << "Terminal: Width = 80, Height = 40\n";
     string file_path = __FILE__;
     string dir_path = file_path.substr(0, file_path.rfind("\\"));
     string startScreenFile = dir_path + "\\StartScreen.txt";
@@ -58,7 +60,8 @@ int main()
     while (true)
     {
         short key = getKey();
-        if (key == 0x000D) {break;} // keyMap["ENTER"]
+        break;
+        //if (key == 0x000D) {break;} // keyMap["ENTER"]
     }
 
     startGame();
