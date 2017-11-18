@@ -16,8 +16,8 @@ using std::vector;
 
 #include "structs.hpp"
 
-void flood(Position pPos, vector<vector<short>> & floodMap, vector<vector<short>> roomMap);
+void flood(Position pPos, Room & room);
 void testFlood();
-void testPrintRoom(vector<vector<char>> printMap);
+void testPrintRoom(vector<vector<unsigned char>> printMap);
 void testPrintFlood(vector<vector<short>> printMap);
-void shittyPopulateMap(vector<vector<char>> & popMap);
+void shittyPopulateMap(Room & r);

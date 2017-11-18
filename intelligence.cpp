@@ -19,6 +19,8 @@ using std::endl;
 #include <iomanip>
 #include <cstdlib>
 #include <ctime>
+#include <string>
+using std::string;
 // Custom Libraries
 #include "intelligence.hpp"
 #include "structs.hpp"
@@ -27,39 +29,47 @@ const char MAPSIZE = 16;
 const char PATH = '_';
 const char WALL = 219;
 
-void flood(Position pPos, vector<vector<short>> & floodMap, vector<vector<char>> roomMap)
+
+void enemyTurn(Enemy e)
 {
-    floodMap.resize(MAPSIZE,vector<short>(MAPSIZE,-1));
-    floodMap[pPos.x][pPos.y] = 0;
+    if(true){}
+}
+
+
+void flood(Position zero, Room & room)//vector<vector<short>> & floodMap, vector<vector<unsigned char>> roomMap)
+{
+    room.flood.clear();
+    room.flood.resize(MAPSIZE,vector<short>(MAPSIZE,-1));
+    room.flood[zero.x][zero.y] = 0;
     bool floodComplete = false;
     short floodCount = 0;
-    while(!floodComplete && floodCount < MAPSIZE*MAPSIZE)
+    while(!floodComplete)
     {
         floodComplete = true;
-        for(int i=0; i < MAPSIZE-1; i++)
+        for(int i=0; i < MAPSIZE; i++)
         {
-            for(int j=0; j < MAPSIZE-1; j++)
+            for(int j=0; j < MAPSIZE; j++)
             {
-                if(floodMap[i][j] == floodCount)
+                if(room.flood[i][j] == floodCount)
                 {
-                    if(j < MAPSIZE && floodMap[i][j+1] == -1 && roomMap[i][j+1] == PATH) // up
+                    if(j < MAPSIZE-1 && room.flood[i][j+1] == -1 && room.grid[i][j+1] == PATH) // up
                     {
-                        floodMap[i][j+1] = floodCount + 1;
+                        room.flood[i][j+1] = floodCount + 1;
                         floodComplete = false;
                     }
-                    if(j > 0 && floodMap[i][j-1] == -1 && roomMap[i][j-1] == PATH) // down
+                    if(j > 0 && room.flood[i][j-1] == -1 && room.grid[i][j-1] == PATH) // down
                     {
-                        floodMap[i][j-1] = floodCount + 1;
+                        room.flood[i][j-1] = floodCount + 1;
                         floodComplete = false;
                     }
-                    if(i < MAPSIZE && floodMap[i+1][j] == -1 && roomMap[i+1][j] == PATH) // right
+                    if(i < MAPSIZE-1 && room.flood[i+1][j] == -1 && room.grid[i+1][j] == PATH) // right
                     {
-                        floodMap[i+1][j] = floodCount + 1;
+                        room.flood[i+1][j] = floodCount + 1;
                         floodComplete = false;
                     }
-                    if(i > 0 && floodMap[i-1][j] == -1 && roomMap[i-1][j] == PATH) // left
+                    if(i > 0 && room.flood[i-1][j] == -1 && room.grid[i-1][j] == PATH) // left
                     {
-                        floodMap[i-1][j] = floodCount + 1;
+                        room.flood[i-1][j] = floodCount + 1;
                         floodComplete = false;
                     }
                 }
@@ -72,64 +82,83 @@ void flood(Position pPos, vector<vector<short>> & floodMap, vector<vector<char>>
 
 void testFlood()
 {
-    vector<vector<char>> testRoomMap;
-    vector<vector<short>> testFloodMap;
+    Room testRoom;
     Position playerPosition = {0,0};
-    shittyPopulateMap(testRoomMap);
-    flood(playerPosition, testFloodMap, testRoomMap);
-    cout << "\nActual Room:";
-    testPrintRoom(testRoomMap);
-    cout << "Flood-vision:";
-    testPrintFlood(testFloodMap);
-    cout << endl;
+    shittyPopulateMap(testRoom);
 }
 
 
-void testPrintRoom(vector<vector<char>> printRoom)
+void testPrintRoom(vector<vector<unsigned char>> printRoom)
 {
-    cout << endl;
+    cout << string(2*(MAPSIZE+1),WALL) << endl << WALL;
     for(int i=0; i<MAPSIZE; i++)
     {
         for(int j=0; j<MAPSIZE; j++)
         {
-            cout << std::setw(2) << printRoom[i][j] << printRoom[i][j];
+            cout << printRoom[i][j] << printRoom[i][j];
         }
-        cout << endl;
+        cout << WALL << endl << WALL;
     }
+    cout << string(2*(MAPSIZE+1)-1,WALL) << endl;
 }
 
 
 void testPrintFlood(vector<vector<short>> printFlood)
 {
-    cout << endl;
     for(int i=0; i<MAPSIZE; i++)
     {
         for(int j=0; j<MAPSIZE; j++)
         {
-            if (printFlood[i][j] == -1){ cout << WALL << WALL << " "; }
-            else{ cout << std::setw(2) << printFlood[i][j] << " "; }
+            if (printFlood[i][j] == -1){ cout << WALL << WALL; }
+            else{ cout << std::setw(2) << printFlood[i][j]; }
         }
         cout << endl;
     }
 }
 
 
-void shittyPopulateMap(vector<vector<char>> & popMap)
+void shittyPopulateMap(Room & r)
 {
-    std::srand(std::time(0));
-    vector<vector<short>> fMap;
-    popMap.resize(MAPSIZE,vector<char>(MAPSIZE,WALL));
-    popMap[0][0] = PATH;
-    popMap[10][10] = PATH;
-    short floodCount = 0;
-    while(floodCount < MAPSIZE*MAPSIZE)
-    {
-        int intX = (int)(std::rand()*MAPSIZE/RAND_MAX);
-        int intY = (int)(std::rand()*MAPSIZE/RAND_MAX);
+    cout << "\nSHITTY POPULATE MAP\n";
+    r.grid.resize(MAPSIZE,vector<unsigned char>(MAPSIZE,WALL));
+    r.flood.resize(MAPSIZE,vector<short>(MAPSIZE,-1));
+    r.grid[0][0] = PATH;
+    r.grid[MAPSIZE-1][MAPSIZE-1] = PATH;
 
-        popMap[intX][intY] = PATH;
-        flood({0,0}, fMap, popMap);
-        if (fMap[10][10] != -1) {break;}
-        floodCount++;
+    vector<Position> posDeck;
+    for (int i=0; i<MAPSIZE; i++)
+    {
+        for(int j=0; j<MAPSIZE; j++)
+        {
+            posDeck.push_back({i,j});
+        }
     }
+
+    std::srand(std::time(0));
+    while (r.flood[MAPSIZE-1][MAPSIZE-1] == -1)
+    {
+        int rint = (int)(std::rand() * posDeck.size() / RAND_MAX);
+        r.grid[posDeck[rint].x][posDeck[rint].y] = PATH;
+        posDeck.erase(posDeck.begin() + rint);
+        flood({0,0}, r);
+    }
+
+    cout << "Shitty Generated Room:\n";
+    testPrintRoom(r.grid);
+    cout << "Flood Vision:\n";
+    testPrintFlood(r.flood);
+
+    for (int i=0; i<MAPSIZE; i++)
+    {
+        for(int j=0; j<MAPSIZE; j++)
+        {
+            if(r.flood[i][j] == -1)
+            {
+                r.grid[i][j] = WALL;
+            }
+        }
+    }
+
+    cout << "Final Room:\n";
+    testPrintRoom(r.grid);
 }

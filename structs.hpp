@@ -14,6 +14,8 @@
 #ifndef STRUCTS_H
 #define STRUCTS_H
 
+#include <vector>
+using std::vector;
 
 struct Position{
     int x;
@@ -29,6 +31,13 @@ struct Player{
 struct Enemy{
     double health;
     Position pos;
+    //...
+};
+
+struct Room{
+    vector<vector<unsigned char>> grid;
+    vector<vector<short>> flood;
+    vector<Enemy> enemies;
     //...
 };
 
