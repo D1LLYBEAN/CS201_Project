@@ -24,6 +24,7 @@ using std::string;
 // Custom Libraries
 #include "intelligence.hpp"
 #include "structs.hpp"
+#include "input.hpp"
 
 const char MAPSIZE = 16;
 const char PATH = '_';
@@ -31,6 +32,52 @@ const char WALL = 219;
 const char ENTRANCE = '@';
 const char EXIT = '@';
 const char ENEMY = '&';
+
+
+void enemyLogic(Enemy & e, Room & r)
+{
+    if(r.flood[e.pos.x][e.pos.y] > 0)
+    {
+        short lowestFlood = r.flood[e.pos.x][e.pos.y];
+        char moveDir;
+        Position movePos;
+        if(e.pos.y < MAPSIZE-1 && r.flood[e.pos.x][e.pos.y+1] > -1 && r.flood[e.pos.x][e.pos.y+1] < lowestFlood) // UP
+        {
+            lowestFlood = r.flood[e.pos.x][e.pos.y+1];
+            moveDir = 'U';
+            movePos = {e.pos.x,e.pos.y+1};
+        }
+        if(e.pos.y > 0 && r.flood[e.pos.x][e.pos.y-1] > -1 && r.flood[e.pos.x][e.pos.y-1] < lowestFlood) // DOWN
+        {
+            lowestFlood = r.flood[e.pos.x][e.pos.y-1];
+            moveDir = 'D';
+            movePos = {e.pos.x,e.pos.y-1};
+        }
+        if(e.pos.x < MAPSIZE-1 && r.flood[e.pos.x+1][e.pos.y] > -1 && r.flood[e.pos.x+1][e.pos.y] < lowestFlood) // RIGHT
+        {
+            lowestFlood = r.flood[e.pos.x+1][e.pos.y];
+            moveDir = 'R';
+            movePos = {e.pos.x+1,e.pos.y};
+        }
+        if(e.pos.x > 0 && r.flood[e.pos.x-1][e.pos.y] > -1 && r.flood[e.pos.x-1][e.pos.y] < lowestFlood) // LEFT
+        {
+            lowestFlood = r.flood[e.pos.x-1][e.pos.y];
+            moveDir = 'L';
+            movePos = {e.pos.x-1,e.pos.y};
+        }
+        if(moveDir >= 0)
+        {
+            //moveChar(e,r);                // HELD UP BY INCOMPLETE moveChar() FUNCTION!
+            cout << r.flood[e.pos.x][e.pos.y] << " (" << e.pos.x << "," << e.pos.y << ") " << moveDir << " " << r.flood[movePos.x][movePos.y] << " (" << movePos.x << "," << movePos.y << ")\n";
+        }
+    }
+}
+
+void enemyTurn(Room & r)
+{
+    for(Enemy e : r.enemies)
+        enemyLogic(e,r);
+}
 
 
 void spawnEnemies(Room & r)
@@ -108,18 +155,23 @@ void flood(Position zero, Room & room)//vector<vector<short>> & floodMap, vector
 
 void testFlood()
 {
-    Room testRoom;
-    Position startPos = {0,0};
-    //Position endPos = {MAPSIZE-1,MAPSIZE-1};
-    Position endPos = {0,MAPSIZE-1};
-    shittyPopulateMap(startPos,endPos,testRoom);
+    while(true)
+    {
+        Room testRoom;
+        Position startPos = {0,0};
+        Position endPos = {MAPSIZE-1,MAPSIZE-1};
+        shittyPopulateMap(startPos,endPos,testRoom);
+        enemyTurn(testRoom);
+        short key = getKey();
+        if(key == '\\') {break;}
+    }
 }
 
 
 void testPrintRoom(vector<vector<unsigned char>> printRoom)
 {
     cout << string(2*(MAPSIZE+1),WALL) << endl << WALL;
-    for(int i=0; i<MAPSIZE; i++)
+    for(int i=MAPSIZE-1; i>=0; i--)
     {
         for(int j=0; j<MAPSIZE; j++)
         {
@@ -134,7 +186,7 @@ void testPrintRoom(vector<vector<unsigned char>> printRoom)
 void testPrintFlood(vector<vector<short>> printFlood)
 {
     cout << string(2*(MAPSIZE+1),WALL) << endl << WALL;
-    for(int i=0; i<MAPSIZE; i++)
+    for(int i=MAPSIZE-1; i>=0; i--)
     {
         for(int j=0; j<MAPSIZE; j++)
         {

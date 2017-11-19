@@ -16,6 +16,8 @@ using std::vector;
 
 #include "structs.hpp"
 
+void enemyLogic(Enemy & e, Room & r);
+void enemyTurn(Room & r);
 void spawnEnemies(Room & r);
 void flood(Position pPos, Room & room);
 void testFlood();
