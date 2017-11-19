@@ -14,7 +14,6 @@
 #ifndef INPUT_H
 #define INPUT_H
 
-
 #include <map>
 using std::map;
 #include <string>
@@ -44,6 +43,5 @@ const map<string,short> keyMap =
     //...
     {"CTRL+Z",      0x001A},
 };
-
 
 #endif // INPUT_H
