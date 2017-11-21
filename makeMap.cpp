@@ -13,6 +13,7 @@
 #include "structs.hpp"
 #include <iostream>
 #include <ctime>
+#include <cstdlib>
 #include <string>
 #include "input.hpp"
 using std::string;
@@ -119,8 +120,8 @@ void makeRoom(Position entr, Position exit, Room & r)
     // Place Entrance and Exit spaces at respective positions
     r.grid[entr.x][entr.y] = ENTRANCE;
     r.grid[exit.x][exit.y] = EXIT;
-    
-    
+
+
     // clean up unreachable grid spaces
     for (int i=0; i<MAPSIZE; i++)
     {
@@ -138,7 +139,7 @@ void makeRoom(Position entr, Position exit, Room & r)
 
 void makeFloor(Position entr, Position exit, Floor & f)
 {
-	
+
 }
 
 void generateRoom()
@@ -149,7 +150,7 @@ void generateRoom()
         Position startPos = {0,0};
         //pick a random number between 0 and 2, less than one is left greater is right.
         Position endPos = {MAPSIZE-1,MAPSIZE-1};
-        //pick random number between 0 and 2, less that one is top greater is bottom. 
+        //pick random number between 0 and 2, less that one is top greater is bottom.
         makeRoom(startPos,endPos,testRoom);
         short key = getKey();
         if(key == '\\') {break;}
