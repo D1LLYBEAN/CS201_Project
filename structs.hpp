@@ -45,6 +45,7 @@ struct Room{
 
 struct Floor{
 	vector< vector<Room> > rooms;
+	int depth;
 	//...
 };
 

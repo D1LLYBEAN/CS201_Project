@@ -11,10 +11,10 @@
 // creates the map, so far just a single room
 
 #include "structs.hpp"
+#include "input.hpp"
 #include <iostream>
 #include <ctime>
 #include <string>
-#include "input.hpp"
 using std::string;
 using std::cout;
 const char MAPSIZE = 16;
@@ -107,7 +107,7 @@ void makeRoom(Position entr, Position exit, Room & r)
 
     // randomly replace walls with paths, one grid space at a time
     // use flood() to determine when end position can be reached from start
-    std::srand(std::time(0));
+    
     while (r.flood[exit.x][exit.y] == -1)                           // check if end position can be reached from start position
     {
         int rint = (int)(std::rand() * posDeck.size() / RAND_MAX);  // random int represents random grid space
@@ -134,24 +134,38 @@ void makeRoom(Position entr, Position exit, Room & r)
     }
     cout << "Room:\n";
     showRoom(r.grid);
+    //return r;
 }
 
 void makeFloor(Position entr, Position exit, Floor & f)
+{
+	vector< vector<Room> > rooms = f.rooms;
+	Position testEnter = {0,0};
+	Position testExit = {10,10};
+	//Room testRoom = makeRoom(testEnter, testExit, testRoom);
+	//rooms.push_back(testRoom);
+}
+
+void printFloor(Floor f)
 {
 	
 }
 
 void generateRoom()
 {
+	std::srand(std::time(0));
     while(true)
     {
-        Room testRoom;
-        Position startPos = {0,0};
-        //pick a random number between 0 and 2, less than one is left greater is right.
-        Position endPos = {MAPSIZE-1,MAPSIZE-1};
-        //pick random number between 0 and 2, less that one is top greater is bottom. 
-        makeRoom(startPos,endPos,testRoom);
-        short key = getKey();
-        if(key == '\\') {break;}
+    	short key = getKey();
+    	if(key == '\\') {break;}
+    	if(key == 'g')
+		{
+	        Room testRoom;
+	        Position startPos = {0,0};
+	        //pick a random number between 0 and 2, less than one is left greater is right.
+	        Position endPos = {MAPSIZE-1,MAPSIZE-1};
+	        //pick random number between 0 and 2, less that one is top greater is bottom. 
+	        makeRoom(startPos,endPos,testRoom);
+		}
     }
 }
