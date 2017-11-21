@@ -19,6 +19,7 @@ using std::cout;
 #include "game.hpp"
 #include "input.hpp"
 #include "intelligence.hpp"
+#include "makeMap.hpp"
 
 
 void startGame()
@@ -34,6 +35,7 @@ void startGame()
     cout << "Enter \'\\\' to end game!\n";
     cout << "Assign other hotkeys in game.cpp, within game(), for testing purposes!\n";
     cout << "[Dillon] I am using the \'f\' key to test my flood algorithm.\n";
+    cout << "[Liam] I am using the 'g' key for testing floor/room generation.\n";
     cout << "Try to limit hotkeys to one-per-person, so we don't all keep editing game.cpp.\n";
     cout << "Make a function and edit it within your .cpp instead of editing game.cpp.\n";
     game();
@@ -47,6 +49,7 @@ void game()
         //if (key == 0x001B) {break;} // keyMap["ESC"]
         if (key == '\\') {break;}
         else if (key == 'f') { testFlood(); }
+        else if (key == 'g') { generateRoom(); }
         // ASSIGN MORE HOTKEYS HERE FOR TESTING!
 
         //...

@@ -37,8 +37,15 @@ struct Enemy{
 struct Room{
     vector<vector<unsigned char>> grid;
     vector<vector<short>> flood;
+    vector<int> exits;
     vector<Enemy> enemies;
+    Position pos;
     //...
+};
+
+struct Floor{
+	vector< vector<Room> > rooms;
+	//...
 };
 
 
