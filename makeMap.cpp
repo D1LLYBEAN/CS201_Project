@@ -14,6 +14,7 @@
 #include "input.hpp"
 #include <iostream>
 #include <ctime>
+#include <cstdlib>
 #include <string>
 using std::string;
 using std::cout;
@@ -119,8 +120,8 @@ void makeRoom(Position entr, Position exit, Room & r)
     // Place Entrance and Exit spaces at respective positions
     r.grid[entr.x][entr.y] = ENTRANCE;
     r.grid[exit.x][exit.y] = EXIT;
-    
-    
+
+
     // clean up unreachable grid spaces
     for (int i=0; i<MAPSIZE; i++)
     {
@@ -139,6 +140,7 @@ void makeRoom(Position entr, Position exit, Room & r)
 
 void makeFloor(Position entr, Position exit, Floor & f)
 {
+<<<<<<< HEAD
 	vector< vector<Room> > rooms = f.rooms;
 	Position testEnter = {0,0};
 	Position testExit = {10,10};
@@ -149,6 +151,9 @@ void makeFloor(Position entr, Position exit, Floor & f)
 void printFloor(Floor f)
 {
 	
+=======
+
+>>>>>>> 53052b9d70efb2d7c02381c9ab03c9ca84d93b2a
 }
 
 void generateRoom()
@@ -156,6 +161,7 @@ void generateRoom()
 	std::srand(std::time(0));
     while(true)
     {
+<<<<<<< HEAD
     	short key = getKey();
     	if(key == '\\') {break;}
     	if(key == 'g')
@@ -167,5 +173,15 @@ void generateRoom()
 	        //pick random number between 0 and 2, less that one is top greater is bottom. 
 	        makeRoom(startPos,endPos,testRoom);
 		}
+=======
+        Room testRoom;
+        Position startPos = {0,0};
+        //pick a random number between 0 and 2, less than one is left greater is right.
+        Position endPos = {MAPSIZE-1,MAPSIZE-1};
+        //pick random number between 0 and 2, less that one is top greater is bottom.
+        makeRoom(startPos,endPos,testRoom);
+        short key = getKey();
+        if(key == '\\') {break;}
+>>>>>>> 53052b9d70efb2d7c02381c9ab03c9ca84d93b2a
     }
 }
