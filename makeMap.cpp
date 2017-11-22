@@ -18,7 +18,7 @@
 #include <string>
 using std::string;
 using std::cout;
-const char MAPSIZE = 16;
+const char MAPSIZE = 3;
 const char PATH = '_';
 const char WALL = 219;
 const char ENTRANCE = '@';
@@ -135,22 +135,38 @@ void makeRoom(Position entr, Position exit, Room & r)
     }
     cout << "Room:\n";
     showRoom(r.grid);
-    //return r;
 }
 
 void makeFloor(Position entr, Position exit, Floor & f)
 {
 	vector< vector<Room> > rooms = f.rooms;
-	//Position testEnter = {0,0};
-	//Position testExit = {10,10};
-	//Room testRoom = makeRoom(testEnter, testExit, testRoom);
-	//rooms.push_back(testRoom);
+	Position testEnter = {0,0};
+	Position testExit = {MAPSIZE-1,MAPSIZE-1};
+	Room testRoom;
+	makeRoom(testEnter, testExit, testRoom);
+	for(auto i = 0; i < MAPSIZE; ++i)
+	{
+		Room testRoom;
+		vector<Room> rowRoom;
+		for(auto j = 0; j < MAPSIZE; ++j)
+		{
+			makeRoom(testEnter, testExit, testRoom);
+			rowRoom.push_back(testRoom);
+		}
+		rooms.push_back(rowRoom);
+	}
 }
 
 void printFloor(Floor f)
 {
-	
-
+	//needs to print out first line of each room on each line, then return. then second line of the first row of rooms and so on.
+	for(auto i = 0; i < MAPSIZE; ++i)
+	{
+		for(auto j = 0; j < MAPSIZE; ++j)
+		{
+			
+		}
+	}
 }
 
 void generateRoom()
@@ -162,12 +178,13 @@ void generateRoom()
     	if(key == '\\') {break;}
     	if(key == 'g')
 		{
-	        Room testRoom;
+	        Floor testFloor;
 	        Position startPos = {0,0};
 	        //pick a random number between 0 and 2, less than one is left greater is right.
 	        Position endPos = {MAPSIZE-1,MAPSIZE-1};
 	        //pick random number between 0 and 2, less that one is top greater is bottom. 
-	        makeRoom(startPos,endPos,testRoom);
+	        makeFloor(startPos,endPos,testFloor);
 		}
     }
+    cout << "exited generate Room";
 }
