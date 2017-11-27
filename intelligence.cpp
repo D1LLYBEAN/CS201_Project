@@ -155,16 +155,23 @@ void flood(Position zero, Room & room)//vector<vector<short>> & floodMap, vector
 
 void testFlood()
 {
+    cout << "\n\n";
+    cout << "FLOOD TESTING\n\n";
+    cout << "Flood Testing Hotkeys:\n";
+    cout << "f - Shitty Generate\n";
+    cout << "\n";
     while(true)
     {
+        short key = getKey();
+        if(key == '\\') { break; }
+        if(key != 'f') { continue; }
         Room testRoom;
         Position startPos = {0,0};
         Position endPos = {MAPSIZE-1,MAPSIZE-1};
         shittyPopulateMap(startPos,endPos,testRoom);
         enemyTurn(testRoom);
-        short key = getKey();
-        if(key == '\\') {break;}
     }
+    cout << "\n\nFLOOD TESTING ENDED\n\n";
 }
 
 

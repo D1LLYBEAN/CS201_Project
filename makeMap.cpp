@@ -11,13 +11,14 @@
 // creates the map, so far just a single room
 
 #include "structs.hpp"
+#include "input.hpp"
 #include <iostream>
 #include <ctime>
+#include <cstdlib>
 #include <string>
-#include "input.hpp"
 using std::string;
 using std::cout;
-const char MAPSIZE = 16;
+const char MAPSIZE = 3;
 const char PATH = '_';
 const char WALL = 219;
 const char ENTRANCE = '@';
@@ -107,7 +108,7 @@ void makeRoom(Position entr, Position exit, Room & r)
 
     // randomly replace walls with paths, one grid space at a time
     // use flood() to determine when end position can be reached from start
-    std::srand(std::time(0));
+    
     while (r.flood[exit.x][exit.y] == -1)                           // check if end position can be reached from start position
     {
         int rint = (int)(std::rand() * posDeck.size() / RAND_MAX);  // random int represents random grid space
@@ -119,8 +120,8 @@ void makeRoom(Position entr, Position exit, Room & r)
     // Place Entrance and Exit spaces at respective positions
     r.grid[entr.x][entr.y] = ENTRANCE;
     r.grid[exit.x][exit.y] = EXIT;
-    
-    
+
+
     // clean up unreachable grid spaces
     for (int i=0; i<MAPSIZE; i++)
     {
@@ -138,20 +139,52 @@ void makeRoom(Position entr, Position exit, Room & r)
 
 void makeFloor(Position entr, Position exit, Floor & f)
 {
-	
+	vector< vector<Room> > rooms = f.rooms;
+	Position testEnter = {0,0};
+	Position testExit = {MAPSIZE-1,MAPSIZE-1};
+	Room testRoom;
+	makeRoom(testEnter, testExit, testRoom);
+	for(auto i = 0; i < MAPSIZE; ++i)
+	{
+		Room testRoom;
+		vector<Room> rowRoom;
+		for(auto j = 0; j < MAPSIZE; ++j)
+		{
+			makeRoom(testEnter, testExit, testRoom);
+			rowRoom.push_back(testRoom);
+		}
+		rooms.push_back(rowRoom);
+	}
+}
+
+void printFloor(Floor f)
+{
+	//needs to print out first line of each room on each line, then return. then second line of the first row of rooms and so on.
+	for(auto i = 0; i < MAPSIZE; ++i)
+	{
+		for(auto j = 0; j < MAPSIZE; ++j)
+		{
+			
+		}
+	}
 }
 
 void generateRoom()
 {
+	std::srand(std::time(0));
     while(true)
     {
-        Room testRoom;
-        Position startPos = {0,0};
-        //pick a random number between 0 and 2, less than one is left greater is right.
-        Position endPos = {MAPSIZE-1,MAPSIZE-1};
-        //pick random number between 0 and 2, less that one is top greater is bottom. 
-        makeRoom(startPos,endPos,testRoom);
-        short key = getKey();
-        if(key == '\\') {break;}
+    	short key = getKey();
+    	if(key == '\\') {break;}
+    	if(key == 'g')
+		{
+	        Floor testFloor;
+	        Position startPos = {0,0};
+	        //pick a random number between 0 and 2, less than one is left greater is right.
+	        Position endPos = {MAPSIZE-1,MAPSIZE-1};
+	        //pick random number between 0 and 2, less that one is top greater is bottom. 
+	        makeFloor(startPos,endPos,testFloor);
+		}
     }
+    cout << "exited generate Room";
 }

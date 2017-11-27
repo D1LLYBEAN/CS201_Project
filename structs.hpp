@@ -114,8 +114,14 @@ private:
 
 
 struct Floor{
+<<<<<<< HEAD
     vector< vector<Room> > rooms;
     //...
+=======
+	vector< vector<Room> > rooms;
+	int depth;
+	//...
+>>>>>>> 16e4b15cf9f9fa8817c904ca37936d125029f63c
 };
 
 
