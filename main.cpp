@@ -59,7 +59,7 @@ int main()
     // This will also need its own input.cpp/.hpp files!
     while (true)
     {
-        short key = getKey();
+        getKey();
         break;
         //if (key == 0x000D) {break;} // keyMap["ENTER"]
     }
