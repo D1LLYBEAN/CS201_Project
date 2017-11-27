@@ -24,6 +24,12 @@ const char ENTRANCE = '@';
 const char EXIT = '@';
 const char ENEMY = '&';
 
+struct Position;
+class Player;
+class Enemy;
+struct Room;
+struct Floor;
+
 
 struct Position{
     int x;
@@ -49,7 +55,7 @@ public:
                     _room.grid[_position.x][_position.y] = PATH;
                     _position.y -=_position.y;
                     _room.grid[_position.x][_position.y] = PLAYER;
-                    
+
                 }
                 break;
             case 'd': //East
@@ -58,7 +64,7 @@ public:
                     _room.grid[_position.y][_position.x] = PATH;
                     _position.x +=_position.x;
                     _room.grid[_position.y][_position.x] = PLAYER;
-                    
+
                 }
                 break;
             case 'a': //West
@@ -67,22 +73,22 @@ public:
                     _room.grid[_position.y][_position.x] = PATH;
                     _position.x -=_position.x;
                     _room.grid[_position.y][_position.x] = PLAYER;
-                    
+
                 }
                 break;
                 return true; // if player or enemy successfully moves to new spot
         }
         return true;
     }
-    
+
     int attack() {
-        
+
     }
     //...attack function
 private:
     double _health;
     Position _position;
-    Room _room;
+    Room & _room;
     //...
 };
 
@@ -104,24 +110,18 @@ public:
     vector<vector<short>> flood;
     vector<int> exits;
     vector<Enemy> enemies;
-    Position pos;
     //...
 private:
-    
+
 };
 
 
 
 
 struct Floor{
-<<<<<<< HEAD
-    vector< vector<Room> > rooms;
-    //...
-=======
 	vector< vector<Room> > rooms;
 	int depth;
 	//...
->>>>>>> 16e4b15cf9f9fa8817c904ca37936d125029f63c
 };
 
 
