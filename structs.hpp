@@ -17,36 +17,108 @@
 #include <vector>
 using std::vector;
 
+const char MAPSIZE = 16;
+const char PATH = '_';
+const char WALL = 219;
+const char ENTRANCE = '@';
+const char EXIT = '@';
+const char ENEMY = '&';
+
+
 struct Position{
     int x;
     int y;
 };
 
-struct Player{
+class Player{
+public:
+    bool move(int dir)
+    {
+        switch(dir){
+            case 'w': // North
+                if(_position.y < MAPSIZE && _room.grid[_position.x][_position.y+1] == PATH)
+                {
+                    _room.grid[_position.x][_position.y] = PATH;
+                    _position.y += _position.y;
+                    _room.grid[_position.x][_position.y] = PLAYER;
+                }
+                break;
+            case 's': //South
+                if(_position.y <MAPSIZE && _room.grid[_position.x][_position.y+1] == PATH)
+                {
+                    _room.grid[_position.x][_position.y] = PATH;
+                    _position.y -=_position.y;
+                    _room.grid[_position.x][_position.y] = PLAYER;
+                    
+                }
+                break;
+            case 'd': //East
+                if(_position.x <MAPSIZE && _room.grid[_position.y][_position.x+1] == PATH)
+                {
+                    _room.grid[_position.y][_position.x] = PATH;
+                    _position.x +=_position.x;
+                    _room.grid[_position.y][_position.x] = PLAYER;
+                    
+                }
+                break;
+            case 'a': //West
+                if(_position.x <MAPSIZE && _room.grid[_position.y][_position.x+1] == PATH)
+                {
+                    _room.grid[_position.y][_position.x] = PATH;
+                    _position.x -=_position.x;
+                    _room.grid[_position.y][_position.x] = PLAYER;
+                    
+                }
+                break;
+                return true; // if player or enemy successfully moves to new spot
+        }
+        return true;
+    }
+    
+    int attack() {
+        
+    }
+    //...attack function
+private:
+    double _health;
+    Position _position;
+    Room _room;
+    //...
+};
+
+
+
+
+struct Enemy{ //turn to class, make identical to player for now
     double health;
     Position pos;
     //...
 };
 
-struct Enemy{
-    double health;
-    Position pos;
-    //...
-};
 
-struct Room{
+
+
+class Room{
+public:
     vector<vector<unsigned char>> grid;
     vector<vector<short>> flood;
     vector<int> exits;
     vector<Enemy> enemies;
     Position pos;
     //...
+private:
+    
 };
 
+
+
+
 struct Floor{
-	vector< vector<Room> > rooms;
-	//...
+    vector< vector<Room> > rooms;
+    //...
 };
+
+
 
 
 #endif // STRUCTS_H

@@ -19,14 +19,27 @@
 // updates player/enemy struct, and updates grid vector
 bool moveChar(Position pos, int dir)
 {
-    switch(dir)
-    case 0: // North
-    //...
-    return true; // if player or enemy successfully moves to new spot
+    switch(dir){
+        case 'w': // North
+            pos.y += pos.y;
+            break;
+        case 's': //South
+            pos.y -= pos.y;
+            break;
+        case 'd': //East
+            pos.x += pos.x;
+            break;
+        case 'a': //West
+            pos.x -= pos.x;
+            break;
+            return true; // if player or enemy successfully moves to new spot
+    }
+    return true;
 }
 
 // applies damage to target
 // based on attacker and defender stats?
+// I asked Chris and he told me that auto is not allowed in a function prototype.  It must be the type of the passed variable and has something to do with templates.
 void attack(auto attacker, auto defender)
 {
     defender.health -= 1.0;
