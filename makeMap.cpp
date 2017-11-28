@@ -18,12 +18,7 @@
 #include <string>
 using std::string;
 using std::cout;
-const char MAPSIZE = 3;
-const char PATH = '_';
-const char WALL = 219;
-const char ENTRANCE = '@';
-const char EXIT = '@';
-const char ENEMY = '&';
+
 
 void floodFill(Position zero, Room & room)//vector<vector<short>> & floodMap, vector<vector<unsigned char>> roomMap)
 {
@@ -108,7 +103,7 @@ void makeRoom(Position entr, Position exit, Room & r)
 
     // randomly replace walls with paths, one grid space at a time
     // use flood() to determine when end position can be reached from start
-    
+
     while (r.flood[exit.x][exit.y] == -1)                           // check if end position can be reached from start position
     {
         int rint = (int)(std::rand() * posDeck.size() / RAND_MAX);  // random int represents random grid space
@@ -164,7 +159,7 @@ void printFloor(Floor f)
 	{
 		for(auto j = 0; j < MAPSIZE; ++j)
 		{
-			
+
 		}
 	}
 }
@@ -182,7 +177,7 @@ void generateRoom()
 	        Position startPos = {0,0};
 	        //pick a random number between 0 and 2, less than one is left greater is right.
 	        Position endPos = {MAPSIZE-1,MAPSIZE-1};
-	        //pick random number between 0 and 2, less that one is top greater is bottom. 
+	        //pick random number between 0 and 2, less that one is top greater is bottom.
 	        makeFloor(startPos,endPos,testFloor);
 		}
     }

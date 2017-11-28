@@ -26,14 +26,6 @@ using std::string;
 #include "structs.hpp"
 #include "input.hpp"
 
-const char MAPSIZE = 16;
-const char PATH = '_';
-const char WALL = 219;
-const char ENTRANCE = '@';
-const char EXIT = '@';
-const char ENEMY = '&';
-
-
 void enemyLogic(Enemy & e, Room & r)
 {
     if(r.flood[e.pos.x][e.pos.y] > 0)

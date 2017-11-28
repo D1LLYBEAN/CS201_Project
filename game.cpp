@@ -27,9 +27,10 @@ void startGame()
     cout << string(50,'\n'); //system("CLS");
     cout << "Loading.";
     // generateMaps() here
+    vector<vector<unsigned char>> tempRoom; // ditch this!
     cout << ".";
-    Player player1;
-    Cursor cursor1;
+    Player player1(tempRoom);
+    Cursor cursor1(tempRoom);
     cout << ".";
     // printRoom() here
     cout << string(50,'\n'); //system("CLS");
@@ -107,8 +108,8 @@ void game()
     {
         short key = getKey();
 
-        if (!cursor.isEnabled() && !playerAction(key)) {break;}
-        if (cursor.isEnabled() && !cursorAction(key)) {break;}
+        if (!Cursor::isEnabled() && !playerAction(key)) {break;}
+        if (Cursor::isEnabled() && !cursorAction(key)) {break;}
 
         else if (key == 'f') { testFlood(); } // REMOVE THIS LATER!
         else if (key == 'g') { generateRoom(); } // REMOVE THIS LATER!
@@ -119,6 +120,6 @@ void game()
     cout << string(50,'\n'); //system("CLS");
     cout << "Game Over\n"; // gameOver()
     cout << "\nPlay Again? (Y/N)\n";
-    short key = getkey();
+    short key = getKey();
     if(key == 'y') {startGame();}
 }
