@@ -40,27 +40,30 @@ struct Position{
 
 class Player{
 public:
-    Player (vector<vector<unsigned char>> startRoom);
-    bool movechar(int dir);
-    void takeDamage(double damage);
+    static void setRoom(Room & startRoom);
+    static Position getPos();
+    static Room getRoom();
+    static bool movechar(short dir);
+    static void takeDamage(double damage);
 private:
     static double _health;
     static Position _position;
-    static vector<vector<unsigned char>> _roomgrid;
+    static Room * _room;
     //...
 };
 
 
 class Cursor{
 public:
-    Cursor(vector<vector<unsigned char>> startRoom);
+    static void setRoom(Room & startRoom);
     static bool isEnabled();
     static Position getPos();
-    bool movechar(int dir);
+    static Room getRoom();
+    static bool movechar(short dir);
 private:
     static bool _enabled;
     static Position _position;
-    static vector<vector<unsigned char>> _roomgrid;
+    static Room * _room;
     //...
 };
 

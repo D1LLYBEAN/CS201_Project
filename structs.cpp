@@ -1,49 +1,60 @@
+#include <iostream>
 #include "structs.hpp"
+
+// ---------- Player ---------- //
 
 double Player::_health = 100.0;
 Position Player::_position = {0,0};
-vector<vector<unsigned char>> Player::_roomgrid = {};
+Room * Player::_room = nullptr;
 
-Player::Player (vector<vector<unsigned char>> startRoom)
+void Player::setRoom (Room & startRoom)
 {
-    _roomgrid = startRoom;
+    _room = &startRoom;
 }
 
-bool Player::movechar(int dir)
+Position Player::getPos()
+{
+    return _position;
+}
+
+Room Player::getRoom()
+{
+    return (*_room);
+}
+
+bool Player::movechar(short dir)
 {
     switch(dir){
         case 'w': // North
-            if(_position.y < MAPSIZE && _roomgrid[_position.x][_position.y+1] == PATH)
+            if(_position.y < MAPSIZE && (*_room).grid[_position.x][_position.y+1] == PATH)
             {
-                _roomgrid[_position.x][_position.y] = PATH;
-                _position.y += _position.y;
-                _roomgrid[_position.x][_position.y] = PLAYER;
+                (*_room).grid[_position.x][_position.y] = PATH;
+                _position.y++;
+                (*_room).grid[_position.x][_position.y] = PLAYER;
             }
             break;
         case 's': //South
-            if(_position.y <MAPSIZE && _roomgrid[_position.x][_position.y+1] == PATH)
+            if(_position.y > 0 && (*_room).grid[_position.x][_position.y-1] == PATH)
             {
-                _roomgrid[_position.x][_position.y] = PATH;
-                _position.y -=_position.y;
-                _roomgrid[_position.x][_position.y] = PLAYER;
+                (*_room).grid[_position.x][_position.y] = PATH;
+                _position.y--;
+                (*_room).grid[_position.x][_position.y] = PLAYER;
             }
             break;
         case 'd': //East
-            if(_position.x <MAPSIZE && _roomgrid[_position.y][_position.x+1] == PATH)
+            if(_position.x < MAPSIZE && (*_room).grid[_position.x+1][_position.y] == PATH)
             {
-                _roomgrid[_position.y][_position.x] = PATH;
-                _position.x +=_position.x;
-                _roomgrid[_position.y][_position.x] = PLAYER;
-
+                (*_room).grid[_position.x][_position.y] = PATH;
+                _position.x++;
+                (*_room).grid[_position.x][_position.y] = PLAYER;
             }
             break;
         case 'a': //West
-            if(_position.x <MAPSIZE && _roomgrid[_position.y][_position.x+1] == PATH)
+            if(_position.x > 0 && (*_room).grid[_position.x-1][_position.y] == PATH)
             {
-                _roomgrid[_position.y][_position.x] = PATH;
-                _position.x -=_position.x;
-                _roomgrid[_position.y][_position.x] = PLAYER;
-
+                (*_room).grid[_position.x][_position.y] = PATH;
+                _position.x--;
+                (*_room).grid[_position.x][_position.y] = PLAYER;
             }
             break;
             return true; // if player or enemy successfully moves to new spot
@@ -56,18 +67,15 @@ void Player::takeDamage(double damage)
     _health -= damage;
 }
 
-
-
-
-
+// ---------- Cursor ---------- //
 
 bool Cursor::_enabled = false;
 Position Cursor::_position = {0,0};
-vector<vector<unsigned char>> Cursor::_roomgrid = {};
+Room * Cursor::_room = nullptr;
 
-Cursor::Cursor (vector<vector<unsigned char>> startRoom)
+void Cursor::setRoom (Room & startRoom)
 {
-    _roomgrid = startRoom;
+    _room = &startRoom;
 }
 
 bool Cursor::isEnabled()
@@ -80,41 +88,44 @@ Position Cursor::getPos()
     return _position;
 }
 
-bool Cursor::movechar(int dir)
+Room Cursor::getRoom()
+{
+    return (*_room);
+}
+
+bool Cursor::movechar(short dir)
 {
     switch(dir){
         case 'w': // North
-            if(_position.y < MAPSIZE && _roomgrid[_position.x][_position.y+1] == PATH)
+            if(_position.y < MAPSIZE && (*_room).grid[_position.x][_position.y+1] == PATH)
             {
-                _roomgrid[_position.x][_position.y] = PATH;
-                _position.y += _position.y;
-                _roomgrid[_position.x][_position.y] = CURSOR;
+                (*_room).grid[_position.x][_position.y] = PATH;
+                _position.y++;
+                (*_room).grid[_position.x][_position.y] = CURSOR;
             }
             break;
         case 's': //South
-            if(_position.y <MAPSIZE && _roomgrid[_position.x][_position.y+1] == PATH)
+            if(_position.y > 0 && (*_room).grid[_position.x][_position.y-1] == PATH)
             {
-                _roomgrid[_position.x][_position.y] = PATH;
-                _position.y -=_position.y;
-                _roomgrid[_position.x][_position.y] = CURSOR;
+                (*_room).grid[_position.x][_position.y] = PATH;
+                _position.y--;
+                (*_room).grid[_position.x][_position.y] = CURSOR;
             }
             break;
         case 'd': //East
-            if(_position.x <MAPSIZE && _roomgrid[_position.y][_position.x+1] == PATH)
+            if(_position.x < MAPSIZE && (*_room).grid[_position.x+1][_position.y] == PATH)
             {
-                _roomgrid[_position.y][_position.x] = PATH;
-                _position.x +=_position.x;
-                _roomgrid[_position.y][_position.x] = CURSOR;
-
+                (*_room).grid[_position.x][_position.y] = PATH;
+                _position.x++;
+                (*_room).grid[_position.x][_position.y] = CURSOR;
             }
             break;
         case 'a': //West
-            if(_position.x <MAPSIZE && _roomgrid[_position.y][_position.x+1] == PATH)
+            if(_position.x > 0 && (*_room).grid[_position.x-1][_position.y] == PATH)
             {
-                _roomgrid[_position.y][_position.x] = PATH;
-                _position.x -=_position.x;
-                _roomgrid[_position.y][_position.x] = CURSOR;
-
+                (*_room).grid[_position.x][_position.y] = PATH;
+                _position.x--;
+                (*_room).grid[_position.x][_position.y] = CURSOR;
             }
             break;
             return true; // if player or enemy successfully moves to new spot

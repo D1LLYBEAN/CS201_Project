@@ -15,4 +15,5 @@
 
 void startGame();
 bool playerAction(short);
+bool cusorAction(short);
 void game();

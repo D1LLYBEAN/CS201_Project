@@ -174,7 +174,7 @@ void testPrintRoom(vector<vector<unsigned char>> printRoom)
     {
         for(int j=0; j<MAPSIZE; j++)
         {
-            cout << printRoom[i][j] << printRoom[i][j];
+            cout << printRoom[j][i] << printRoom[j][i];
         }
         cout << WALL << endl << WALL;
     }
@@ -189,8 +189,8 @@ void testPrintFlood(vector<vector<short>> printFlood)
     {
         for(int j=0; j<MAPSIZE; j++)
         {
-            if (printFlood[i][j] == -1){ cout << WALL << WALL; }
-            else{ cout << std::setw(2) << printFlood[i][j]; }
+            if (printFlood[j][i] == -1){ cout << WALL << WALL; }
+            else{ cout << std::setw(2) << printFlood[j][i]; }
         }
         cout << WALL << endl << WALL;
     }
@@ -207,6 +207,7 @@ void shittyPopulateMap(Position entr, Position exit, Room & r)
     r.flood.clear();
     r.grid.resize(MAPSIZE,vector<unsigned char>(MAPSIZE,WALL));
     r.flood.resize(MAPSIZE,vector<short>(MAPSIZE,-1));
+
     // initialize start and end positions
     r.grid[entr.x][entr.y] = PATH;
     r.grid[exit.x][exit.y] = PATH;
@@ -237,10 +238,10 @@ void shittyPopulateMap(Position entr, Position exit, Room & r)
     r.grid[exit.x][exit.y] = EXIT;
 
     // print shitty room, and print what can be seen by flood()
-    cout << "Shitty Room:\n";
-    testPrintRoom(r.grid);
-    cout << "Flood Vision:\n";
-    testPrintFlood(r.flood);
+//    cout << "Shitty Room:\n";
+//    testPrintRoom(r.grid);
+//    cout << "Flood Vision:\n";
+//    testPrintFlood(r.flood);
 
     // clean up unreachable grid spaces
     for (int i=0; i<MAPSIZE; i++)
@@ -257,6 +258,6 @@ void shittyPopulateMap(Position entr, Position exit, Room & r)
     spawnEnemies(r);
 
     // print room with enemies
-    cout << "Clean Room (Populated):\n";
-    testPrintRoom(r.grid);
+//    cout << "Clean Room (Populated):\n";
+//    testPrintRoom(r.grid);
 }

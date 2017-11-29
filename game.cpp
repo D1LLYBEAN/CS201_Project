@@ -16,10 +16,13 @@ using std::cout;
 //#include <stdlib.h>
 // Custom Libraries
 //#include "makeMap.hpp"
+#include "structs.hpp"
 #include "game.hpp"
 #include "input.hpp"
 #include "intelligence.hpp"
 #include "makeMap.hpp"
+
+Floor FLOOR;
 
 
 void startGame()
@@ -27,10 +30,8 @@ void startGame()
     cout << string(50,'\n'); //system("CLS");
     cout << "Loading.";
     // generateMaps() here
-    vector<vector<unsigned char>> tempRoom; // ditch this!
     cout << ".";
-    Player player1(tempRoom);
-    Cursor cursor1(tempRoom);
+    //...
     cout << ".";
     // printRoom() here
     cout << string(50,'\n'); //system("CLS");
@@ -49,19 +50,13 @@ bool playerAction(short k)
     switch (k)
     {
     case 'w':
-        //player.move(0);
-        break;
     case 'a':
-        //player.move(1);
-        break;
     case 's':
-        //player.move(2);
-        break;
     case 'd':
-        //player.move(3);
+        return Player::movechar(k);
         break;
     case ' ':
-        //cursor(player1);
+        //Cursor::toggleCursor();
         break;
     case '\\':
         return false;
@@ -78,19 +73,14 @@ bool cursorAction(short k)
     switch (k)
     {
     case 'w':
-        //cursor.move(0);
-        break;
     case 'a':
-        //cursor.move(1);
-        break;
     case 's':
-        //cursor.move(2);
-        break;
     case 'd':
-        //cursor.move(3);
+        return Cursor::movechar(k);
         break;
     case ' ':
         //attack(player1,cursor.pos);
+        //Cursor::toggleCursor;
         break;
     case '\\':
         return false;
@@ -104,8 +94,15 @@ bool cursorAction(short k)
 
 void game()
 {
+    Room gameRoom;
+    shittyPopulateMap({0,0},{MAPSIZE-1,MAPSIZE-1},gameRoom);
+    gameRoom.grid[Player::getPos().x][Player::getPos().y] = PLAYER;
+    Player::setRoom(gameRoom);
+    Cursor::setRoom(gameRoom);
     while(true)
     {
+        cout << string(50,'\n'); //system("CLS");
+        testPrintRoom(gameRoom.grid);
         short key = getKey();
 
         if (!Cursor::isEnabled() && !playerAction(key)) {break;}
