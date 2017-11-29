@@ -53,10 +53,11 @@ bool playerAction(short k)
     case 'a':
     case 's':
     case 'd':
+        Cursor::setPos(Player::getPos());
         return Player::movechar(k);
         break;
     case ' ':
-        //Cursor::toggleCursor();
+        Cursor::enable();
         break;
     case '\\':
         return false;
@@ -79,8 +80,8 @@ bool cursorAction(short k)
         return Cursor::movechar(k);
         break;
     case ' ':
-        //attack(player1,cursor.pos);
-        //Cursor::toggleCursor;
+        //if(enemy.takedamage(Player::getAP())){Cursor::disable()};
+        Cursor::disable();
         break;
     case '\\':
         return false;
@@ -99,20 +100,30 @@ void game()
     gameRoom.grid[Player::getPos().x][Player::getPos().y] = PLAYER;
     Player::setRoom(gameRoom);
     Cursor::setRoom(gameRoom);
+    cout << string(50,'\n'); //system("CLS");
+    testPrintRoom(gameRoom.grid);
     while(true)
     {
-        cout << string(50,'\n'); //system("CLS");
-        testPrintRoom(gameRoom.grid);
+
         short key = getKey();
 
-        if (!Cursor::isEnabled() && !playerAction(key)) {break;}
-        if (Cursor::isEnabled() && !cursorAction(key)) {break;}
+        if(key == '\\'){break;}
 
+        if (!Cursor::isEnabled())
+        {
+            if(!playerAction(key)) {continue;}
+        }
+        else if (Cursor::isEnabled())
+        {
+            if(cursorAction(key)) {continue;}
+        }
         else if (key == 'f') { testFlood(); } // REMOVE THIS LATER!
         else if (key == 'g') { generateRoom(); } // REMOVE THIS LATER!
         // ASSIGN MORE HOTKEYS HERE FOR TESTING!
 
         //...
+        cout << string(50,'\n'); //system("CLS");
+        testPrintRoom(gameRoom.grid);
     }
     cout << string(50,'\n'); //system("CLS");
     cout << "Game Over\n"; // gameOver()

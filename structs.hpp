@@ -56,7 +56,10 @@ private:
 class Cursor{
 public:
     static void setRoom(Room & startRoom);
+    static void setPos(Position newpos);
     static bool isEnabled();
+    static void enable();
+    static void disable();
     static Position getPos();
     static Room getRoom();
     static bool movechar(short dir);
