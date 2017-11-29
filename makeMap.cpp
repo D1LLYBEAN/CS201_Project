@@ -206,7 +206,7 @@ void generateRoom()
 	        Position startPos = {0,0};
 	        //pick a random number between 0 and 2, less than one is left greater is right.
 	        Position endPos = {MAPSIZE-1,MAPSIZE-1};
-	        //pick random number between 0 and 2, less that one is top greater is bottom. 
+	        //pick random number between 0 and 2, less that one is top greater is bottom.
 	        makeFloor(startPos,endPos,testFloor);
 	        printFloor(testFloor);
 		}
