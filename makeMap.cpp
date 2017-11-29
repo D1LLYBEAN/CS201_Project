@@ -18,12 +18,7 @@
 #include <string>
 using std::string;
 using std::cout;
-const char MAPSIZE = 5;
-const char PATH = '_';
-const char WALL = 219;
-const char ENTRANCE = '@';
-const char EXIT = '@';
-const char ENEMY = '&';
+
 
 void floodFill(Position zero, Room & room)//vector<vector<short>> & floodMap, vector<vector<unsigned char>> roomMap)
 {
@@ -108,7 +103,7 @@ void makeRoom(Position entr, Position exit, Room & r)
 
     // randomly replace walls with paths, one grid space at a time
     // use flood() to determine when end position can be reached from start
-    
+
     while (r.flood[exit.x][exit.y] == -1)                           // check if end position can be reached from start position
     {
         int rint = (int)(std::rand() * posDeck.size() / RAND_MAX);  // random int represents random grid space
@@ -133,64 +128,40 @@ void makeRoom(Position entr, Position exit, Room & r)
             }
         }
     }
-    //cout << "Room:\n";
-    //showRoom(r.grid);
+    cout << "Room:\n";
+    showRoom(r.grid);
 }
 
 void makeFloor(Position entr, Position exit, Floor & f)
 {
 	vector< vector<Room> > rooms = f.rooms;
-	//needs to generate the "maze" and hand each makeroom the entrance and exit positions
 	Position testEnter = {0,0};
 	Position testExit = {MAPSIZE-1,MAPSIZE-1};
+	Room testRoom;
+	makeRoom(testEnter, testExit, testRoom);
 	for(auto i = 0; i < MAPSIZE; ++i)
 	{
+		Room testRoom;
 		vector<Room> rowRoom;
 		for(auto j = 0; j < MAPSIZE; ++j)
 		{
-			Room testRoom;
-			/*if( (Position){i,j} == entr) // floor entrance room
-			{
-				testRoom = 
-			}
-			else if() // floor exit room
-			{
-				
-			}
-			else
-			{*/
-				makeRoom(testEnter, testExit, testRoom);
-			//}
+			makeRoom(testEnter, testExit, testRoom);
 			rowRoom.push_back(testRoom);
 		}
 		rooms.push_back(rowRoom);
 	}
-	f.rooms = rooms;
-	//cout << "TEST ME:\n";
 }
 
 void printFloor(Floor f)
 {
-	//does not include left side wall...
-	cout << string((MAPSIZE*MAPSIZE*2+MAPSIZE),(char)WALL) << std::endl;
-	for(int fY = 0; fY<MAPSIZE; fY++) //increment floor y
+	//needs to print out first line of each room on each line, then return. then second line of the first row of rooms and so on.
+	for(auto i = 0; i < MAPSIZE; ++i)
 	{
-		for(int rY = 0; rY < MAPSIZE; rY++) //increment room y
+		for(auto j = 0; j < MAPSIZE; ++j)
 		{
-			for(int fX = 0; fX < MAPSIZE; fX++) //increment floor x
-			{
-				for(int rX = 0; rX < MAPSIZE; rX++) //increment room x
-				{
-					cout << f.rooms[fX][fY].grid[rX][rY];
-					cout << f.rooms[fX][fY].grid[rX][rY];
-				}
-				cout << (char)WALL;
-			}
-			cout << std:: endl;
+
 		}
-		cout << string((MAPSIZE*MAPSIZE*2+MAPSIZE),(char)WALL) << std::endl;
 	}
-	cout << std:: endl;
 }
 
 void generateRoom()
@@ -208,8 +179,7 @@ void generateRoom()
 	        Position endPos = {MAPSIZE-1,MAPSIZE-1};
 	        //pick random number between 0 and 2, less that one is top greater is bottom.
 	        makeFloor(startPos,endPos,testFloor);
-	        printFloor(testFloor);
 		}
     }
-    cout << "Exited generate.";
+    cout << "exited generate Room";
 }

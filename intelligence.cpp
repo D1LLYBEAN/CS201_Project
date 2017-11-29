@@ -26,14 +26,6 @@ using std::string;
 #include "structs.hpp"
 #include "input.hpp"
 
-const char MAPSIZE = 16;
-const char PATH = '_';
-const char WALL = 219;
-const char ENTRANCE = '@';
-const char EXIT = '@';
-const char ENEMY = '&';
-
-
 void enemyLogic(Enemy & e, Room & r)
 {
     if(r.flood[e.pos.x][e.pos.y] > 0)
@@ -155,16 +147,23 @@ void flood(Position zero, Room & room)//vector<vector<short>> & floodMap, vector
 
 void testFlood()
 {
+    cout << "\n\n";
+    cout << "FLOOD TESTING\n\n";
+    cout << "Flood Testing Hotkeys:\n";
+    cout << "f - Shitty Generate\n";
+    cout << "\n";
     while(true)
     {
+        short key = getKey();
+        if(key == '\\') { break; }
+        if(key != 'f') { continue; }
         Room testRoom;
         Position startPos = {0,0};
         Position endPos = {MAPSIZE-1,MAPSIZE-1};
         shittyPopulateMap(startPos,endPos,testRoom);
         enemyTurn(testRoom);
-        short key = getKey();
-        if(key == '\\') {break;}
     }
+    cout << "\n\nFLOOD TESTING ENDED\n\n";
 }
 
 
@@ -175,7 +174,7 @@ void testPrintRoom(vector<vector<unsigned char>> printRoom)
     {
         for(int j=0; j<MAPSIZE; j++)
         {
-            cout << printRoom[i][j] << printRoom[i][j];
+            cout << printRoom[j][i] << printRoom[j][i];
         }
         cout << WALL << endl << WALL;
     }
@@ -190,8 +189,8 @@ void testPrintFlood(vector<vector<short>> printFlood)
     {
         for(int j=0; j<MAPSIZE; j++)
         {
-            if (printFlood[i][j] == -1){ cout << WALL << WALL; }
-            else{ cout << std::setw(2) << printFlood[i][j]; }
+            if (printFlood[j][i] == -1){ cout << WALL << WALL; }
+            else{ cout << std::setw(2) << printFlood[j][i]; }
         }
         cout << WALL << endl << WALL;
     }
@@ -208,6 +207,7 @@ void shittyPopulateMap(Position entr, Position exit, Room & r)
     r.flood.clear();
     r.grid.resize(MAPSIZE,vector<unsigned char>(MAPSIZE,WALL));
     r.flood.resize(MAPSIZE,vector<short>(MAPSIZE,-1));
+
     // initialize start and end positions
     r.grid[entr.x][entr.y] = PATH;
     r.grid[exit.x][exit.y] = PATH;
@@ -238,10 +238,10 @@ void shittyPopulateMap(Position entr, Position exit, Room & r)
     r.grid[exit.x][exit.y] = EXIT;
 
     // print shitty room, and print what can be seen by flood()
-    cout << "Shitty Room:\n";
-    testPrintRoom(r.grid);
-    cout << "Flood Vision:\n";
-    testPrintFlood(r.flood);
+//    cout << "Shitty Room:\n";
+//    testPrintRoom(r.grid);
+//    cout << "Flood Vision:\n";
+//    testPrintFlood(r.flood);
 
     // clean up unreachable grid spaces
     for (int i=0; i<MAPSIZE; i++)
@@ -258,6 +258,6 @@ void shittyPopulateMap(Position entr, Position exit, Room & r)
     spawnEnemies(r);
 
     // print room with enemies
-    cout << "Clean Room (Populated):\n";
-    testPrintRoom(r.grid);
+//    cout << "Clean Room (Populated):\n";
+//    testPrintRoom(r.grid);
 }
