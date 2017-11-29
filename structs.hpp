@@ -42,6 +42,10 @@ struct Room{
     Position pos;
     //...
 };
+/*
+Because the random gen is pseudo random, i could have the floor hold 2d array of keys and then re-gen each time,
+Is inefficent.
+*/
 
 struct Floor{
 	vector< vector<Room> > rooms;
