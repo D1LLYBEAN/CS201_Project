@@ -18,7 +18,7 @@
 #include <string>
 using std::string;
 using std::cout;
-const int FLOORSIZE = 5;
+const int FLOORSIZE = 4;
 
 
 void floodFill(Position zero, Room & room)//vector<vector<short>> & floodMap, vector<vector<unsigned char>> roomMap)
@@ -151,17 +151,21 @@ void makeFloor(Position entr, Position exit, Floor & f)
 			{
 				makeRoom({MAPSIZE/2,MAPSIZE/2},{MAPSIZE-1,MAPSIZE/2},testRoom);
 			}
-			else if( roomSpot.y == exit.y && roomSpot.x == exit.x ) // floor exit room
+			else if( roomSpot.y == exit.y && roomSpot.x == exit.x && (FLOORSIZE%2 == 1)) // floor exit room odd
 			{
 				makeRoom({0,MAPSIZE/2},{MAPSIZE/2,MAPSIZE/2},testRoom);
 			}
+			else if( roomSpot.y == FLOORSIZE-1 && roomSpot.x == 0 && (FLOORSIZE%2 == 0)) // floor exit room even
+			{
+				makeRoom({MAPSIZE-1,MAPSIZE/2},{MAPSIZE/2,MAPSIZE/2},testRoom);
+			}
 			else if((roomSpot.x == FLOORSIZE-1) && (roomSpot.y%2 == 1)) // entrance left middle and exit top middle
 			{
-				makeRoom({1, MAPSIZE/2}, {MAPSIZE/2, 0}, testRoom);
+				makeRoom({0, MAPSIZE/2}, {MAPSIZE/2, 0}, testRoom);
 			}
 			else if((roomSpot.x == FLOORSIZE-1) && (roomSpot.y%2 == 0) ) // entrance left middle and exit bottom middle
 			{
-				makeRoom({1, MAPSIZE/2}, {MAPSIZE/2, MAPSIZE-1}, testRoom);
+				makeRoom({0, MAPSIZE/2}, {MAPSIZE/2, MAPSIZE-1}, testRoom);
 			}
 			else if((roomSpot.x == 0) && (roomSpot.y%2 == 0)) // entrance right middle and exit bottom middle
 			{
@@ -175,7 +179,6 @@ void makeFloor(Position entr, Position exit, Floor & f)
 			{
 				makeRoom({0,MAPSIZE/2},{MAPSIZE-1,MAPSIZE/2},testRoom); // Middle rooms.
 			}
-			//TO DO; MAKE RIGHT SIDE, FIX THE BOTTOM LEFT CORNER
 			rowRoom.push_back(testRoom);
 		}
 		rooms.push_back(rowRoom);
@@ -187,7 +190,7 @@ void makeFloor(Position entr, Position exit, Floor & f)
 void printFloor(Floor f)
 {
 	//does not include left side wall...
-	cout << string((FLOORSIZE*MAPSIZE+FLOORSIZE),(char)WALL) << std::endl;
+	//cout << string((FLOORSIZE*MAPSIZE+FLOORSIZE),(char)WALL) << std::endl;
 	for(int fY = FLOORSIZE-1; fY >= 0; fY--) //increment floor y
 	{
 		for(int rY = MAPSIZE-1; rY >= 0; rY--) //increment room y
@@ -198,12 +201,12 @@ void printFloor(Floor f)
 				{
 					cout << f.rooms[fX][fY].grid[rX][rY];
 				}
-				cout << (char)WALL;
+				//cout << (char)WALL;
 				//cout << "TEST ME:\n";
 			}
 			cout << std:: endl;
 		}
-		cout << string((FLOORSIZE*MAPSIZE+FLOORSIZE),(char)WALL) << std::endl;
+		//cout << string((FLOORSIZE*MAPSIZE+FLOORSIZE),(char)WALL) << std::endl;
 	}
 	cout << std:: endl;
 }

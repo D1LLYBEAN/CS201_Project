@@ -6,7 +6,18 @@
 double Player::_health = 100.0;
 Position Player::_position = {0,0};
 Room * Player::_room = nullptr;
+Floor * Player::_floor = nullptr;
 double Player::_power = 50.0;
+
+void Player::setFloor(Floor & startFloor) // may need this for cursor too...
+{
+	_floor = &startFloor;
+}
+
+Floor Player::getFloor() // same here - liam
+{
+    return (*_floor);
+}
 
 void Player::setRoom (Room & startRoom)
 {

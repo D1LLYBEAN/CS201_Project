@@ -59,8 +59,10 @@ struct Position{
 class Player{
 public:
     static void setRoom(Room & startRoom);
+    static void setFloor(Floor & startFloor); // need this for cursor too? why is cursor not a part of player...
     static Position getPos();
     static Room getRoom();
+    static Floor getFloor(); // need this for cursor too? why is cursor not a part of player...
     static bool movechar(unsigned short dir);
     static void takeDamage(double damage);
     static double getPower();
@@ -68,6 +70,7 @@ private:
     static double _health;
     static Position _position;
     static Room * _room;
+    static Floor * _floor;
     static double _power;
 };
 
