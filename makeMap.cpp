@@ -18,6 +18,7 @@
 #include <string>
 using std::string;
 using std::cout;
+const int FLOORSIZE = 4;
 
 
 void floodFill(Position zero, Room & room)//vector<vector<short>> & floodMap, vector<vector<unsigned char>> roomMap)
@@ -128,40 +129,75 @@ void makeRoom(Position entr, Position exit, Room & r)
             }
         }
     }
-    cout << "Room:\n";
-    showRoom(r.grid);
+    //cout << "Room:\n";
+    //showRoom(r.grid);
 }
 
 void makeFloor(Position entr, Position exit, Floor & f)
 {
 	vector< vector<Room> > rooms = f.rooms;
-	Position testEnter = {0,0};
-	Position testExit = {MAPSIZE-1,MAPSIZE-1};
-	Room testRoom;
-	makeRoom(testEnter, testExit, testRoom);
-	for(auto i = 0; i < MAPSIZE; ++i)
+	//needs to generate the "maze" and hand each makeroom the entrance and exit positions
+	
+	//Position testEnter = {0,0};
+	//Position testExit = {MAPSIZE-1,MAPSIZE-1};
+	for(auto i = 0; i < FLOORSIZE; ++i)
 	{
-		Room testRoom;
 		vector<Room> rowRoom;
-		for(auto j = 0; j < MAPSIZE; ++j)
+		for(auto j = 0; j < FLOORSIZE; ++j)
 		{
-			makeRoom(testEnter, testExit, testRoom);
+			Room testRoom;
+			Position roomSpot = {i, j};
+			if( roomSpot.y == entr.y && roomSpot.x == entr.x ) // floor entrance room
+			{
+				makeRoom({MAPSIZE/2,MAPSIZE/2},{MAPSIZE-1,MAPSIZE/2},testRoom);
+			}
+			else if( roomSpot.y == exit.y && roomSpot.x == exit.x ) // floor exit room
+			{
+				makeRoom({0,MAPSIZE/2},{MAPSIZE/2,MAPSIZE/2},testRoom);
+			}
+			else if(roomSpot.y == FLOORSIZE && roomSpot.y%2 == 0) // entrance left middle and exit bottom middle
+			{
+				cout << "TESTME\n";
+				makeRoom({1, MAPSIZE/2}, {MAPSIZE/2, MAPSIZE-1}, testRoom);
+			}
+			else if(roomSpot.y == FLOORSIZE && roomSpot.y%2 == 1 ) // entrance left middle and exit top middle
+			{
+				makeRoom({1, MAPSIZE/2}, {MAPSIZE/2, MAPSIZE-1}, testRoom);
+			}
+			else
+			{
+				makeRoom({0,MAPSIZE/2},{MAPSIZE-1,MAPSIZE/2},testRoom);
+			}
 			rowRoom.push_back(testRoom);
 		}
 		rooms.push_back(rowRoom);
 	}
+	f.rooms = rooms;
 }
+
 
 void printFloor(Floor f)
 {
-	//needs to print out first line of each room on each line, then return. then second line of the first row of rooms and so on.
-	for(auto i = 0; i < MAPSIZE; ++i)
+	//does not include left side wall...
+	cout << string((FLOORSIZE*MAPSIZE+FLOORSIZE),(char)WALL) << std::endl;
+	for(int fY = FLOORSIZE-1; fY >= 0; fY--) //increment floor y
 	{
-		for(auto j = 0; j < MAPSIZE; ++j)
+		for(int rY = MAPSIZE-1; rY >= 0; rY--) //increment room y
 		{
-
+			for(int fX = 0; fX < FLOORSIZE; fX++) //increment floor x
+			{
+				for(int rX = 0; rX < MAPSIZE; rX++) //increment room x
+				{
+					cout << f.rooms[fX][fY].grid[rX][rY];
+				}
+				cout << (char)WALL;
+				//cout << "TEST ME:\n";
+			}
+			cout << std:: endl;
 		}
+		cout << string((FLOORSIZE*MAPSIZE+FLOORSIZE),(char)WALL) << std::endl;
 	}
+	cout << std:: endl;
 }
 
 void generateRoom()
@@ -176,10 +212,11 @@ void generateRoom()
 	        Floor testFloor;
 	        Position startPos = {0,0};
 	        //pick a random number between 0 and 2, less than one is left greater is right.
-	        Position endPos = {MAPSIZE-1,MAPSIZE-1};
-	        //pick random number between 0 and 2, less that one is top greater is bottom.
+	        Position endPos = {FLOORSIZE-1,FLOORSIZE-1};
+	        //pick random number between 0 and 2, less that one is top greater is bottom. 
 	        makeFloor(startPos,endPos,testFloor);
+	        printFloor(testFloor);
 		}
     }
-    cout << "exited generate Room";
+    cout << "Exited generate.";
 }
