@@ -32,6 +32,7 @@ bool Player::movechar(short dir)
                 _position.y++;
                 (*_room).grid[_position.x][_position.y] = PLAYER;
             }
+            else{return false;}
             break;
         case 's': //South
             if(_position.y > 0 && (*_room).grid[_position.x][_position.y-1] == PATH)
@@ -40,6 +41,7 @@ bool Player::movechar(short dir)
                 _position.y--;
                 (*_room).grid[_position.x][_position.y] = PLAYER;
             }
+            else{return false;}
             break;
         case 'd': //East
             if(_position.x < MAPSIZE && (*_room).grid[_position.x+1][_position.y] == PATH)
@@ -48,6 +50,7 @@ bool Player::movechar(short dir)
                 _position.x++;
                 (*_room).grid[_position.x][_position.y] = PLAYER;
             }
+            else{return false;}
             break;
         case 'a': //West
             if(_position.x > 0 && (*_room).grid[_position.x-1][_position.y] == PATH)
@@ -56,8 +59,8 @@ bool Player::movechar(short dir)
                 _position.x--;
                 (*_room).grid[_position.x][_position.y] = PLAYER;
             }
+            else{return false;}
             break;
-            return true; // if player or enemy successfully moves to new spot
     }
     return true;
 }
@@ -78,9 +81,24 @@ void Cursor::setRoom (Room & startRoom)
     _room = &startRoom;
 }
 
+void Cursor::setPos (Position newpos)
+{
+    _position = newpos;
+}
+
 bool Cursor::isEnabled()
 {
     return _enabled;
+}
+
+void Cursor::enable()
+{
+    _enabled = true;
+}
+
+void Cursor::disable()
+{
+    _enabled = false;
 }
 
 Position Cursor::getPos()
@@ -103,6 +121,7 @@ bool Cursor::movechar(short dir)
                 _position.y++;
                 (*_room).grid[_position.x][_position.y] = CURSOR;
             }
+            else{return false;}
             break;
         case 's': //South
             if(_position.y > 0 && (*_room).grid[_position.x][_position.y-1] == PATH)
@@ -111,6 +130,7 @@ bool Cursor::movechar(short dir)
                 _position.y--;
                 (*_room).grid[_position.x][_position.y] = CURSOR;
             }
+            else{return false;}
             break;
         case 'd': //East
             if(_position.x < MAPSIZE && (*_room).grid[_position.x+1][_position.y] == PATH)
@@ -119,6 +139,7 @@ bool Cursor::movechar(short dir)
                 _position.x++;
                 (*_room).grid[_position.x][_position.y] = CURSOR;
             }
+            else{return false;}
             break;
         case 'a': //West
             if(_position.x > 0 && (*_room).grid[_position.x-1][_position.y] == PATH)
@@ -127,8 +148,8 @@ bool Cursor::movechar(short dir)
                 _position.x--;
                 (*_room).grid[_position.x][_position.y] = CURSOR;
             }
+            else{return false;}
             break;
-            return true; // if player or enemy successfully moves to new spot
     }
     return true;
 }
