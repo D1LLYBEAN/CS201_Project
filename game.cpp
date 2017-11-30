@@ -45,19 +45,25 @@ void startGame()
 }
 
 
-bool playerAction(short k)
+bool playerAction(unsigned short k)
 {
     switch (k)
     {
     case 'w':
+    case 0xE04B: // [LEFT ARROW]
     case 'a':
+    case 0xE048: //[UP ARROW]
     case 's':
+    case 0xE050: // [DOWN ARROW]
     case 'd':
-        Cursor::setPos(Player::getPos());
+    case 0xE04D: // [RIGHT ARROW]
         return Player::movechar(k);
         break;
     case ' ':
         Cursor::enable();
+        cout << string(50,'\n'); //system("CLS");
+        testPrintRoom(Cursor::getRoom().grid);
+        return false;
         break;
     case '\\':
         return false;
@@ -69,19 +75,26 @@ bool playerAction(short k)
 }
 
 
-bool cursorAction(short k)
+bool cursorAction(unsigned short k)
 {
     switch (k)
     {
     case 'w':
+    case 0xE04B: // [LEFT ARROW]
     case 'a':
+    case 0xE048: //[UP ARROW]
     case 's':
+    case 0xE050: // [DOWN ARROW]
     case 'd':
+    case 0xE04D: // [RIGHT ARROW]
         return Cursor::movechar(k);
         break;
     case ' ':
         //if(enemy.takedamage(Player::getAP())){Cursor::disable()};
         Cursor::disable();
+        cout << string(50,'\n'); //system("CLS");
+        testPrintRoom(Player::getRoom().grid);
+        return false;
         break;
     case '\\':
         return false;
@@ -105,25 +118,24 @@ void game()
     while(true)
     {
 
-        short key = getKey();
+        unsigned short key = getKey();
 
-        if(key == '\\'){break;}
+        if (key == 'f') { testFlood(); continue;} // REMOVE THIS LATER!
+        if (key == 'g') { generateRoom(); continue;} // REMOVE THIS LATER!
 
-        if (!Cursor::isEnabled())
+        if(key == '\\' || key == 0x001B){break;}
+        else if (!Cursor::isEnabled())
         {
             if(!playerAction(key)) {continue;}
+            cout << string(50,'\n'); //system("CLS");
+            testPrintRoom(Player::getRoom().grid);
         }
         else if (Cursor::isEnabled())
         {
-            if(cursorAction(key)) {continue;}
+            if(!cursorAction(key)) {continue;}
+            cout << string(50,'\n'); //system("CLS");
+            testPrintRoom(Cursor::getRoom().grid);
         }
-        else if (key == 'f') { testFlood(); } // REMOVE THIS LATER!
-        else if (key == 'g') { generateRoom(); } // REMOVE THIS LATER!
-        // ASSIGN MORE HOTKEYS HERE FOR TESTING!
-
-        //...
-        cout << string(50,'\n'); //system("CLS");
-        testPrintRoom(gameRoom.grid);
     }
     cout << string(50,'\n'); //system("CLS");
     cout << "Game Over\n"; // gameOver()

@@ -12,22 +12,24 @@
 
 #ifdef _WIN32
 
+#include <iostream>
 #include <conio.h>
 #include "input.hpp"
 
 // Returns any key press by the user,
 // including combinations (i.e. Ctrl, Alt, Shift)
-short getKey()
+unsigned short getKey()
 {
-    short key = getch();
+    unsigned short key = getch();
     if (key == 0x00)
     {
-        key = 0x01 + getch(); // distinguish from 0x00, and retrieve second byte of extended code
+        key = 0x0100 + getch(); // distinguish from 0x00, and retrieve second byte of extended code
     }
     else if (key == 0xE0)
     {
-        key = 0xE0 + getch(); // retrieve second byte of extended code
+        key = 0xE000 + getch(); // retrieve second byte of extended code
     }
+    //std::cout << std::hex << key;
     return key;
 }
 
@@ -42,11 +44,11 @@ using std::string;
 
 // Returns any key press by the user,
 // including combinations (i.e. Ctrl, Alt, Shift)
-short getKey()
+unsigned short getKey()
 {
     string line;
     getline(cin,line);
-    short key = line.back();
+    unsigned short key = line.back();
 
     return key;
 }

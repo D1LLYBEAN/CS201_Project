@@ -21,9 +21,9 @@ using std::string;
 
 // Returns any key press by the user,
 // ncluding combinations (i.e. Ctrl, Alt, Shift)
-short getKey();
+unsigned short getKey();
 
-const map<string,short> keyMap =
+const map<string,unsigned short> keyMap =
 {
 //  keyValue    keyName
     {"ENTER",       0x000D},

@@ -169,16 +169,16 @@ void testFlood()
 
 void testPrintRoom(vector<vector<unsigned char>> printRoom)
 {
-    cout << string(2*(MAPSIZE+1),WALL) << endl << WALL;
+    cout << string(MAPSIZE+2,WALL) << endl << WALL;
     for(int i=MAPSIZE-1; i>=0; i--)
     {
         for(int j=0; j<MAPSIZE; j++)
         {
-            cout << printRoom[j][i] << printRoom[j][i];
+            cout << printRoom[j][i];
         }
         cout << WALL << endl << WALL;
     }
-    cout << string(2*(MAPSIZE+1)-1,WALL) << endl;
+    cout << string(MAPSIZE+1,WALL) << endl;
 }
 
 

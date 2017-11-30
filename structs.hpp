@@ -17,14 +17,31 @@
 #include <vector>
 using std::vector;
 
+#ifdef _WIN32
+
 const char MAPSIZE = 16;
-const char PATH = '_';
+const char PATH = ' ';
 const char WALL = 178;
 const char ENTRANCE = '@';
 const char EXIT = '@';
 const char PLAYER = 'i';
-const char CURSOR = 219;
+const char CURSOR = 'X';
 const char ENEMY = '&';
+
+#endif //_WIN32
+#ifdef __MACH__
+
+const char MAPSIZE = 16;
+const char PATH = ' ';
+const char WALL = '#';
+const char ENTRANCE = '@';
+const char EXIT = '@';
+const char PLAYER = 'i';
+const char CURSOR = 'X';
+const char ENEMY = '&';
+
+#endif //__MACH__
+
 
 struct Position;
 class Player;
@@ -43,7 +60,7 @@ public:
     static void setRoom(Room & startRoom);
     static Position getPos();
     static Room getRoom();
-    static bool movechar(short dir);
+    static bool movechar(unsigned short dir);
     static void takeDamage(double damage);
 private:
     static double _health;
@@ -62,11 +79,12 @@ public:
     static void disable();
     static Position getPos();
     static Room getRoom();
-    static bool movechar(short dir);
+    static bool movechar(unsigned short dir);
 private:
     static bool _enabled;
     static Position _position;
-    static Room * _room;
+    static Room * _roompoint;
+    static Room _room;
     //...
 };
 
