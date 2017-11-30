@@ -28,39 +28,39 @@ using std::string;
 
 void enemyLogic(Enemy & e, Room & r)
 {
-    if(r.flood[e.pos.x][e.pos.y] > 0)
+    if(r.flood[e.getPos().x][e.getPos().y] > 0)
     {
-        short lowestFlood = r.flood[e.pos.x][e.pos.y];
+        short lowestFlood = r.flood[e.getPos().x][e.getPos().y];
         char moveDir;
         Position movePos;
-        if(e.pos.y < MAPSIZE-1 && r.flood[e.pos.x][e.pos.y+1] > -1 && r.flood[e.pos.x][e.pos.y+1] < lowestFlood) // UP
+        if(e.getPos().y < MAPSIZE-1 && r.flood[e.getPos().x][e.getPos().y+1] > -1 && r.flood[e.getPos().x][e.getPos().y+1] < lowestFlood) // UP
         {
-            lowestFlood = r.flood[e.pos.x][e.pos.y+1];
+            lowestFlood = r.flood[e.getPos().x][e.getPos().y+1];
             moveDir = 'U';
-            movePos = {e.pos.x,e.pos.y+1};
+            movePos = {e.getPos().x,e.getPos().y+1};
         }
-        if(e.pos.y > 0 && r.flood[e.pos.x][e.pos.y-1] > -1 && r.flood[e.pos.x][e.pos.y-1] < lowestFlood) // DOWN
+        if(e.getPos().y > 0 && r.flood[e.getPos().x][e.getPos().y-1] > -1 && r.flood[e.getPos().x][e.getPos().y-1] < lowestFlood) // DOWN
         {
-            lowestFlood = r.flood[e.pos.x][e.pos.y-1];
+            lowestFlood = r.flood[e.getPos().x][e.getPos().y-1];
             moveDir = 'D';
-            movePos = {e.pos.x,e.pos.y-1};
+            movePos = {e.getPos().x,e.getPos().y-1};
         }
-        if(e.pos.x < MAPSIZE-1 && r.flood[e.pos.x+1][e.pos.y] > -1 && r.flood[e.pos.x+1][e.pos.y] < lowestFlood) // RIGHT
+        if(e.getPos().x < MAPSIZE-1 && r.flood[e.getPos().x+1][e.getPos().y] > -1 && r.flood[e.getPos().x+1][e.getPos().y] < lowestFlood) // RIGHT
         {
-            lowestFlood = r.flood[e.pos.x+1][e.pos.y];
+            lowestFlood = r.flood[e.getPos().x+1][e.getPos().y];
             moveDir = 'R';
-            movePos = {e.pos.x+1,e.pos.y};
+            movePos = {e.getPos().x+1,e.getPos().y};
         }
-        if(e.pos.x > 0 && r.flood[e.pos.x-1][e.pos.y] > -1 && r.flood[e.pos.x-1][e.pos.y] < lowestFlood) // LEFT
+        if(e.getPos().x > 0 && r.flood[e.getPos().x-1][e.getPos().y] > -1 && r.flood[e.getPos().x-1][e.getPos().y] < lowestFlood) // LEFT
         {
-            lowestFlood = r.flood[e.pos.x-1][e.pos.y];
+            lowestFlood = r.flood[e.getPos().x-1][e.getPos().y];
             moveDir = 'L';
-            movePos = {e.pos.x-1,e.pos.y};
+            movePos = {e.getPos().x-1,e.getPos().y};
         }
         if(moveDir >= 0)
         {
             //moveChar(e,r);                // HELD UP BY INCOMPLETE moveChar() FUNCTION!
-            cout << r.flood[e.pos.x][e.pos.y] << " (" << e.pos.x << "," << e.pos.y << ") " << moveDir << " " << r.flood[movePos.x][movePos.y] << " (" << movePos.x << "," << movePos.y << ")\n";
+            cout << r.flood[e.getPos().x][e.getPos().y] << " (" << e.getPos().x << "," << e.getPos().y << ") " << moveDir << " " << r.flood[movePos.x][movePos.y] << " (" << movePos.x << "," << movePos.y << ")\n";
         }
     }
 }
@@ -91,9 +91,8 @@ void spawnEnemies(Room & r)
     for(int i=0; i<5; i++)
     {
         Enemy tempEnemy;
-        tempEnemy.health = 10.0;                                    // initialize enemy health
         int rint = (int)(std::rand() * posDeck.size() / RAND_MAX);  // random int represents random (path) grid space
-        tempEnemy.pos = {posDeck[rint].x,posDeck[rint].y};          // set enemy position to random (path) grid space position
+        tempEnemy.setPos({posDeck[rint].x,posDeck[rint].y});          // set enemy position to random (path) grid space position
         r.grid[posDeck[rint].x][posDeck[rint].y] = ENEMY;           // replace path at random grid space with enemy
         posDeck.erase(posDeck.begin() + rint);                      // remove selected (path) grid space from possible future selection
         r.enemies.push_back(tempEnemy);                             // add enemy to room.enemies vector

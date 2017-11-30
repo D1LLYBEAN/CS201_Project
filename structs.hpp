@@ -14,6 +14,7 @@
 #ifndef STRUCTS_H
 #define STRUCTS_H
 
+#include <iostream>
 #include <vector>
 using std::vector;
 
@@ -62,11 +63,12 @@ public:
     static Room getRoom();
     static bool movechar(unsigned short dir);
     static void takeDamage(double damage);
+    static double getPower();
 private:
     static double _health;
     static Position _position;
     static Room * _room;
-    //...
+    static double _power;
 };
 
 
@@ -80,6 +82,7 @@ public:
     static Position getPos();
     static Room getRoom();
     static bool movechar(unsigned short dir);
+    static void attack();
 private:
     static bool _enabled;
     static Position _position;
@@ -89,10 +92,36 @@ private:
 };
 
 
-struct Enemy{ //turn to class, make identical to player for now
-    double health;
-    Position pos;
-    //...
+class Enemy{ //turn to class, make identical to player for now
+public:
+    Enemy()
+    {
+        _health = 100.0;
+        _position = {0,0};
+    }
+    Position getPos()
+    {
+        return _position;
+    }
+    void setPos(Position newPos)
+    {
+        _position = newPos;
+    }
+    bool takeDamage(double damage)
+    {
+        std::cout << "old enemy health: " << _health << std::endl;
+        _health -= damage;
+        std::cout << "new enemy health: " << _health << std::endl;
+        if(_health <= 0.0)
+        {
+            std::cout << "enemy is dead\n";
+            return false;
+        }
+        return true;
+    }
+private:
+    double _health;
+    Position _position;
 };
 
 

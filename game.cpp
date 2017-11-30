@@ -90,7 +90,7 @@ bool cursorAction(unsigned short k)
         return Cursor::movechar(k);
         break;
     case ' ':
-        //if(enemy.takedamage(Player::getAP())){Cursor::disable()};
+        Cursor::attack();
         Cursor::disable();
         cout << string(50,'\n'); //system("CLS");
         testPrintRoom(Player::getRoom().grid);
@@ -129,6 +129,7 @@ void game()
             if(!playerAction(key)) {continue;}
             cout << string(50,'\n'); //system("CLS");
             testPrintRoom(Player::getRoom().grid);
+            //cursorInfo();
         }
         else if (Cursor::isEnabled())
         {

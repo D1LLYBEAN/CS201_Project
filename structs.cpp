@@ -6,6 +6,7 @@
 double Player::_health = 100.0;
 Position Player::_position = {0,0};
 Room * Player::_room = nullptr;
+double Player::_power = 50.0;
 
 void Player::setRoom (Room & startRoom)
 {
@@ -72,6 +73,12 @@ bool Player::movechar(unsigned short dir)
 void Player::takeDamage(double damage)
 {
     _health -= damage;
+}
+
+double Player::getPower()
+{
+    std::cout << "player power: " << _power << std::endl;
+    return _power;
 }
 
 // ---------- Cursor ---------- //
@@ -164,4 +171,25 @@ bool Cursor::movechar(unsigned short dir)
             break;
     }
     return true;
+}
+
+void Cursor::attack()
+{
+    std::cout << "attack\n";
+    if((*_roompoint).grid[_position.x][_position.y] == ENEMY)
+    {
+        std::cout << "attack enemy\n";
+        for(Enemy & e : (*_roompoint).enemies)
+        {
+            if(e.getPos().x == _position.x && e.getPos().y == _position.y)
+            {
+                std::cout << "attack enemy at cursor\n";
+                if(!e.takeDamage(Player::getPower())) // if the enemy is no longer alive...
+                {
+                    std::cout << "enemy at cursor has died\n";
+                    (*_roompoint).grid[_position.x][_position.y] = PATH;
+                }
+            }
+        }
+    }
 }
