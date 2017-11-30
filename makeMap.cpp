@@ -18,7 +18,7 @@
 #include <string>
 using std::string;
 using std::cout;
-const int FLOORSIZE = 4;
+const int FLOORSIZE = 5;
 
 
 void floodFill(Position zero, Room & room)//vector<vector<short>> & floodMap, vector<vector<unsigned char>> roomMap)
@@ -155,19 +155,27 @@ void makeFloor(Position entr, Position exit, Floor & f)
 			{
 				makeRoom({0,MAPSIZE/2},{MAPSIZE/2,MAPSIZE/2},testRoom);
 			}
-			else if(roomSpot.y == FLOORSIZE && roomSpot.y%2 == 0) // entrance left middle and exit bottom middle
+			else if((roomSpot.x == FLOORSIZE-1) && (roomSpot.y%2 == 1)) // entrance left middle and exit top middle
 			{
-				cout << "TESTME\n";
+				makeRoom({1, MAPSIZE/2}, {MAPSIZE/2, 0}, testRoom);
+			}
+			else if((roomSpot.x == FLOORSIZE-1) && (roomSpot.y%2 == 0) ) // entrance left middle and exit bottom middle
+			{
 				makeRoom({1, MAPSIZE/2}, {MAPSIZE/2, MAPSIZE-1}, testRoom);
 			}
-			else if(roomSpot.y == FLOORSIZE && roomSpot.y%2 == 1 ) // entrance left middle and exit top middle
+			else if((roomSpot.x == 0) && (roomSpot.y%2 == 0)) // entrance right middle and exit bottom middle
 			{
-				makeRoom({1, MAPSIZE/2}, {MAPSIZE/2, MAPSIZE-1}, testRoom);
+				makeRoom({MAPSIZE-1, MAPSIZE/2}, {MAPSIZE/2, 0}, testRoom);
+			}
+			else if((roomSpot.x == 0) && (roomSpot.y%2 == 1) ) // entrance right middle and exit top middle
+			{
+				makeRoom({MAPSIZE-1, MAPSIZE/2}, {MAPSIZE/2, MAPSIZE-1}, testRoom);
 			}
 			else
 			{
-				makeRoom({0,MAPSIZE/2},{MAPSIZE-1,MAPSIZE/2},testRoom);
+				makeRoom({0,MAPSIZE/2},{MAPSIZE-1,MAPSIZE/2},testRoom); // Middle rooms.
 			}
+			//TO DO; MAKE RIGHT SIDE, FIX THE BOTTOM LEFT CORNER
 			rowRoom.push_back(testRoom);
 		}
 		rooms.push_back(rowRoom);
