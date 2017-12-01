@@ -1,5 +1,9 @@
 #include <iostream>
 #include "structs.hpp"
+#include "game.hpp"
+#include <math.h>
+#include <stdlib.h>
+#include "intelligence.hpp"
 
 // ---------- Player ---------- //
 
@@ -29,6 +33,11 @@ Position Player::getPos()
     return _position;
 }
 
+void Player::setPos(Position newPos)
+{
+    _position = newPos;
+}
+
 Room Player::getRoom()
 {
     return (*_room);
@@ -39,7 +48,7 @@ bool Player::movechar(unsigned short dir)
     switch(dir){
         case 'w': // North
         case 0xE048: //[UP ARROW]
-            if(_position.y < MAPSIZE-1 && (*_room).grid[_position.x][_position.y+1] == PATH)
+            if(_position.y < MAPSIZE-1 && ((*_room).grid[_position.x][_position.y+1] == PATH|| (*_room).grid[_position.x][_position.y+1] == EXIT))
             {
                 (*_room).grid[_position.x][_position.y] = PATH;
                 _position.y++;
@@ -49,7 +58,7 @@ bool Player::movechar(unsigned short dir)
             break;
         case 's': //South
         case 0xE050: // [DOWN ARROW]
-            if(_position.y > 0 && (*_room).grid[_position.x][_position.y-1] == PATH)
+            if(_position.y > 0 && ((*_room).grid[_position.x][_position.y-1] == PATH|| (*_room).grid[_position.x][_position.y-1] == EXIT))
             {
                 (*_room).grid[_position.x][_position.y] = PATH;
                 _position.y--;
@@ -59,7 +68,7 @@ bool Player::movechar(unsigned short dir)
             break;
         case 'd': //East
         case 0xE04D: // [RIGHT ARROW]
-            if(_position.x < MAPSIZE-1 && (*_room).grid[_position.x+1][_position.y] == PATH)
+            if(_position.x < MAPSIZE-1 && ((*_room).grid[_position.x+1][_position.y] == PATH || (*_room).grid[_position.x+1][_position.y] == EXIT))
             {
                 (*_room).grid[_position.x][_position.y] = PATH;
                 _position.x++;
@@ -69,7 +78,7 @@ bool Player::movechar(unsigned short dir)
             break;
         case 'a': //West
         case 0xE04B: // [LEFT ARROW]
-            if(_position.x > 0 && (*_room).grid[_position.x-1][_position.y] == PATH)
+            if(_position.x > 0 && ((*_room).grid[_position.x-1][_position.y] == PATH || (*_room).grid[_position.x-1][_position.y] == EXIT))
             {
                 (*_room).grid[_position.x][_position.y] = PATH;
                 _position.x--;
@@ -86,9 +95,13 @@ void Player::takeDamage(double damage)
     _health -= damage;
 }
 
+double Player::getHealth()
+{
+    return _health;
+}
+
 double Player::getPower()
 {
-    std::cout << "player power: " << _power << std::endl;
     return _power;
 }
 
@@ -186,21 +199,55 @@ bool Cursor::movechar(unsigned short dir)
 
 void Cursor::attack()
 {
-    std::cout << "attack\n";
-    if((*_roompoint).grid[_position.x][_position.y] == ENEMY)
+    int x1 = Player::getPos().x;
+    int y1 = Player::getPos().y;
+    int x2 = _position.x;
+    int y2 = _position.y;
+    double length = std::max(abs(x2-x1), abs(y2-y1));
+    int x = 0;
+    int y = 0;
+    for(int i=0; i <= length; i++)
     {
-        std::cout << "attack enemy\n";
-        for(Enemy & e : (*_roompoint).enemies)
+        // interpolate between (x1,y1) and (x2,y2)
+        double t = double(i)/length;
+        // at t=0.0 we get (x1,y1); at t=1.0 we get (x2,y2)
+        if ((*_roompoint).grid[round(x1 * (1.0-t) + x2 * t)][y] == WALL && (*_roompoint).grid[x][round(y1 * (1.0-t) + y2 * t)] == WALL)
         {
-            if(e.getPos().x == _position.x && e.getPos().y == _position.y)
+            std::cout << "HIT WALL @ (" << x << "," << y << ")\n";
+            break;
+        }
+        else
+        {
+            x = round(x1 * (1.0-t) + x2 * t);
+            y = round(y1 * (1.0-t) + y2 * t);
+        }
+        // now check tile (x,y)
+        if((*_roompoint).grid[x][y] == WALL)
+        {
+            std::cout << "HIT WALL @ (" << x << "," << y << ")\n";
+            break;
+        }
+        else if((*_roompoint).grid[x][y] == ENEMY)
+        {
+            std::cout << "HIT ENEMY @ (" << x << "," << y << ")\n";
+            for(unsigned int i=0; i < (*_roompoint).enemies.size(); i++)
             {
-                std::cout << "attack enemy at cursor\n";
-                if(!e.takeDamage(Player::getPower())) // if the enemy is no longer alive...
+                if((*_roompoint).enemies[i].getPos().x == x && (*_roompoint).enemies[i].getPos().y == y)
                 {
-                    std::cout << "enemy at cursor has died\n";
-                    (*_roompoint).grid[_position.x][_position.y] = PATH;
+                    if(!(*_roompoint).enemies[i].takeDamage(Player::getPower())) // if the enemy is no longer alive...
+                    {
+                        (*_roompoint).grid[x][y] = PATH;
+                        (*_roompoint).enemies.erase((*_roompoint).enemies.begin() + i);
+                    }
                 }
             }
+            break;
+        }
+        else
+        {
+            _room.grid[x][y] = '+';
         }
     }
+    testPrintRoom(_room.grid);
+    // don't move game forward if player doesn't try to attack?
 }

@@ -13,7 +13,7 @@
 
 #include "structs.hpp"
 
-void startGame();
+bool startGame();
 bool playerAction(short);
 bool cusorAction(short);
-void game();
+bool game();
