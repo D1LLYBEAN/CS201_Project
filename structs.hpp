@@ -123,8 +123,9 @@ private:
 struct Room{
     vector<vector<unsigned char>> grid;
     vector<vector<short>> flood;
-    vector<int> exits;
+    vector<Position> exits;
     vector<Enemy> enemies;
+    Position pos;
     //...
 };
 

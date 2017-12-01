@@ -8,7 +8,7 @@
 // ---------- Player ---------- //
 
 double Player::_health = 100.0;
-Position Player::_position = {0,0};
+Position Player::_position = {MAPSIZE/2,MAPSIZE/2};
 Room * Player::_room = nullptr;
 Floor * Player::_floor = nullptr;
 double Player::_power = 50.0;

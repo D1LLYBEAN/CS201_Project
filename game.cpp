@@ -98,10 +98,14 @@ bool cursorAction(unsigned short k)
 bool game()
 {
     Room gameRoom;
-    shittyPopulateMap({0,0},{MAPSIZE-1,MAPSIZE-1},gameRoom);
+    Floor testFloor;
+    makeFloor({0,0},{MAPSIZE,MAPSIZE},testFloor);
+    gameRoom = testFloor.rooms[0][0];
+    //shittyPopulateMap({0,0},{MAPSIZE-1,MAPSIZE-1},gameRoom);
     gameRoom.grid[Player::getPos().x][Player::getPos().y] = PLAYER;
     Player::setRoom(gameRoom);
     Cursor::setRoom(gameRoom);
+    Player::setPos({gameRoom.exits[0].x, gameRoom.exits[0].y});
     cout << string(50,'\n'); //system("CLS");
     testPrintRoom(gameRoom.grid);
     while(true)
@@ -115,7 +119,9 @@ bool game()
         else if (!Cursor::isEnabled())
         {
             if(!playerAction(key)) {continue;}
-            if(Player::getPos().x == MAPSIZE-1 && Player::getPos().y == MAPSIZE-1){return true;} // NEXT LEVEL
+            Room currentRoom = Player::getRoom();
+            if(Player::getPos().x == currentRoom.exits[1].x && Player::getPos().y == currentRoom.exits[1].y){return true;} // NEXT LEVEL
+            if(Player::getPos().x == currentRoom.exits[0].x && Player::getPos().y == currentRoom.exits[0].y){return true;} // PREVIOUS LEVEL
             enemyTurn(gameRoom);
             cout << string(50,'\n'); //system("CLS");
             testPrintRoom(Player::getRoom().grid);

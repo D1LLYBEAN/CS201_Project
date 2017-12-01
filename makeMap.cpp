@@ -12,6 +12,7 @@
 
 #include "structs.hpp"
 #include "input.hpp"
+#include "intelligence.hpp"
 #include <iostream>
 #include <ctime>
 #include <cstdlib>
@@ -129,6 +130,7 @@ void makeRoom(Position entr, Position exit, Room & r)
             }
         }
     }
+    spawnEnemies(r);
     //cout << "Room:\n";
     //showRoom(r.grid);
 }
@@ -147,37 +149,54 @@ void makeFloor(Position entr, Position exit, Floor & f)
 		{
 			Room testRoom;
 			Position roomSpot = {i, j};
+			testRoom.pos = roomSpot;
 			if( roomSpot.y == entr.y && roomSpot.x == entr.x ) // floor entrance room
 			{
 				makeRoom({MAPSIZE/2,MAPSIZE/2},{MAPSIZE-1,MAPSIZE/2},testRoom);
+				testRoom.exits.push_back({MAPSIZE/2,MAPSIZE/2});
+				testRoom.exits.push_back({MAPSIZE-1,MAPSIZE/2});
 			}
 			else if( roomSpot.y == exit.y && roomSpot.x == exit.x && (FLOORSIZE%2 == 1)) // floor exit room odd
 			{
 				makeRoom({0,MAPSIZE/2},{MAPSIZE/2,MAPSIZE/2},testRoom);
+				testRoom.exits.push_back({0,MAPSIZE/2});
+				testRoom.exits.push_back({MAPSIZE/2,MAPSIZE/2});
 			}
 			else if( roomSpot.y == FLOORSIZE-1 && roomSpot.x == 0 && (FLOORSIZE%2 == 0)) // floor exit room even
 			{
 				makeRoom({MAPSIZE-1,MAPSIZE/2},{MAPSIZE/2,MAPSIZE/2},testRoom);
+				testRoom.exits.push_back({MAPSIZE-1,MAPSIZE/2});
+				testRoom.exits.push_back({MAPSIZE/2,MAPSIZE/2});
 			}
 			else if((roomSpot.x == FLOORSIZE-1) && (roomSpot.y%2 == 1)) // entrance left middle and exit top middle
 			{
 				makeRoom({0, MAPSIZE/2}, {MAPSIZE/2, 0}, testRoom);
+				testRoom.exits.push_back({0, MAPSIZE/2});
+				testRoom.exits.push_back({MAPSIZE/2, 0});
 			}
 			else if((roomSpot.x == FLOORSIZE-1) && (roomSpot.y%2 == 0) ) // entrance left middle and exit bottom middle
 			{
 				makeRoom({0, MAPSIZE/2}, {MAPSIZE/2, MAPSIZE-1}, testRoom);
+				testRoom.exits.push_back({0, MAPSIZE/2});
+				testRoom.exits.push_back({MAPSIZE/2, MAPSIZE-1});
 			}
 			else if((roomSpot.x == 0) && (roomSpot.y%2 == 0)) // entrance right middle and exit bottom middle
 			{
 				makeRoom({MAPSIZE-1, MAPSIZE/2}, {MAPSIZE/2, 0}, testRoom);
+				testRoom.exits.push_back({MAPSIZE-1, MAPSIZE/2});
+				testRoom.exits.push_back({MAPSIZE/2, 0});
 			}
 			else if((roomSpot.x == 0) && (roomSpot.y%2 == 1) ) // entrance right middle and exit top middle
 			{
 				makeRoom({MAPSIZE-1, MAPSIZE/2}, {MAPSIZE/2, MAPSIZE-1}, testRoom);
+				testRoom.exits.push_back({MAPSIZE-1, MAPSIZE/2});
+				testRoom.exits.push_back({MAPSIZE/2, MAPSIZE-1});
 			}
 			else
 			{
 				makeRoom({0,MAPSIZE/2},{MAPSIZE-1,MAPSIZE/2},testRoom); // Middle rooms.
+				testRoom.exits.push_back({0,MAPSIZE/2});
+				testRoom.exits.push_back({MAPSIZE-1,MAPSIZE/2});
 			}
 			rowRoom.push_back(testRoom);
 		}
