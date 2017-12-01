@@ -1,6 +1,9 @@
 #include <iostream>
 #include "structs.hpp"
 #include "game.hpp"
+#include <math.h>
+#include <stdlib.h>
+#include "intelligence.hpp"
 
 // ---------- Player ---------- //
 
@@ -196,22 +199,55 @@ bool Cursor::movechar(unsigned short dir)
 
 void Cursor::attack()
 {
-    std::cout << "attack\n";
-    if((*_roompoint).grid[_position.x][_position.y] == ENEMY)
+    int x1 = Player::getPos().x;
+    int y1 = Player::getPos().y;
+    int x2 = _position.x;
+    int y2 = _position.y;
+    double length = std::max(abs(x2-x1), abs(y2-y1));
+    int x = 0;
+    int y = 0;
+    for(int i=0; i <= length; i++)
     {
-        std::cout << "attack enemy\n";
-        for(unsigned int i=0; i < (*_roompoint).enemies.size(); i++)
+        // interpolate between (x1,y1) and (x2,y2)
+        double t = double(i)/length;
+        // at t=0.0 we get (x1,y1); at t=1.0 we get (x2,y2)
+        if ((*_roompoint).grid[round(x1 * (1.0-t) + x2 * t)][y] == WALL && (*_roompoint).grid[x][round(y1 * (1.0-t) + y2 * t)] == WALL)
         {
-            if((*_roompoint).enemies[i].getPos().x == _position.x && (*_roompoint).enemies[i].getPos().y == _position.y)
+            std::cout << "HIT WALL @ (" << x << "," << y << ")\n";
+            break;
+        }
+        else
+        {
+            x = round(x1 * (1.0-t) + x2 * t);
+            y = round(y1 * (1.0-t) + y2 * t);
+        }
+        // now check tile (x,y)
+        if((*_roompoint).grid[x][y] == WALL)
+        {
+            std::cout << "HIT WALL @ (" << x << "," << y << ")\n";
+            break;
+        }
+        else if((*_roompoint).grid[x][y] == ENEMY)
+        {
+            std::cout << "HIT ENEMY @ (" << x << "," << y << ")\n";
+            for(unsigned int i=0; i < (*_roompoint).enemies.size(); i++)
             {
-                std::cout << "attack enemy at cursor\n";
-                if(!(*_roompoint).enemies[i].takeDamage(Player::getPower())) // if the enemy is no longer alive...
+                if((*_roompoint).enemies[i].getPos().x == x && (*_roompoint).enemies[i].getPos().y == y)
                 {
-                    std::cout << "enemy at cursor has died\n";
-                    (*_roompoint).grid[_position.x][_position.y] = PATH;
-                    (*_roompoint).enemies.erase((*_roompoint).enemies.begin() + i);
+                    if(!(*_roompoint).enemies[i].takeDamage(Player::getPower())) // if the enemy is no longer alive...
+                    {
+                        (*_roompoint).grid[x][y] = PATH;
+                        (*_roompoint).enemies.erase((*_roompoint).enemies.begin() + i);
+                    }
                 }
             }
+            break;
+        }
+        else
+        {
+            _room.grid[x][y] = '+';
         }
     }
+    testPrintRoom(_room.grid);
+    // don't move game forward if player doesn't try to attack?
 }

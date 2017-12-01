@@ -18,20 +18,6 @@
 #include <vector>
 using std::vector;
 
-#ifdef _WIN32
-
-const char MAPSIZE = 16;
-const char PATH = ' ';
-const char WALL = 178;
-const char ENTRANCE = '@';
-const char EXIT = '@';
-const char PLAYER = 'i';
-const char CURSOR = 'X';
-const char ENEMY = '&';
-
-#endif //_WIN32
-#ifdef __MACH__
-
 const char MAPSIZE = 16;
 const char PATH = ' ';
 const char WALL = '#';
@@ -41,7 +27,6 @@ const char PLAYER = 'i';
 const char CURSOR = 'X';
 const char ENEMY = '&';
 
-#endif //__MACH__
 
 
 struct Position;
@@ -115,12 +100,9 @@ public:
     }
     bool takeDamage(double damage)
     {
-        std::cout << "old enemy health: " << _health << std::endl;
         _health -= damage;
-        std::cout << "new enemy health: " << _health << std::endl;
         if(_health <= 0.0)
         {
-            std::cout << "enemy is dead\n";
             return false;
         }
         return true;
