@@ -22,26 +22,17 @@ using std::cout;
 #include "intelligence.hpp"
 #include "makeMap.hpp"
 
-Floor FLOOR;
 
-
-void startGame()
+bool startGame()
 {
     cout << string(50,'\n'); //system("CLS");
     cout << "Loading.";
     // generateMaps() here
     cout << ".";
-    //...
+    Player::setPos({0,0});
     cout << ".";
     // printRoom() here
-    cout << string(50,'\n'); //system("CLS");
-    cout << "Enter \'\\\' to end game!\n";
-    cout << "Assign other hotkeys in game.cpp, within game(), for testing purposes!\n";
-    cout << "[Dillon] I am using the \'f\' key to test my flood algorithm.\n";
-    cout << "[Liam] I am using the 'g' key for testing floor/room generation.\n";
-    cout << "Try to limit hotkeys to one-per-person, so we don't all keep editing game.cpp.\n";
-    cout << "Make a function and edit it within your .cpp instead of editing game.cpp.\n";
-    game();
+    return game();
 }
 
 
@@ -92,8 +83,6 @@ bool cursorAction(unsigned short k)
     case ' ':
         Cursor::attack();
         Cursor::disable();
-        cout << string(50,'\n'); //system("CLS");
-        testPrintRoom(Player::getRoom().grid);
         return false;
         break;
     case '\\':
@@ -106,7 +95,7 @@ bool cursorAction(unsigned short k)
 }
 
 
-void game()
+bool game()
 {
     Room gameRoom;
     shittyPopulateMap({0,0},{MAPSIZE-1,MAPSIZE-1},gameRoom);
@@ -117,7 +106,6 @@ void game()
     testPrintRoom(gameRoom.grid);
     while(true)
     {
-
         unsigned short key = getKey();
 
         if (key == 'f') { testFlood(); continue;} // REMOVE THIS LATER!
@@ -127,20 +115,24 @@ void game()
         else if (!Cursor::isEnabled())
         {
             if(!playerAction(key)) {continue;}
+            if(Player::getPos().x == MAPSIZE-1 && Player::getPos().y == MAPSIZE-1){return true;} // NEXT LEVEL
+            enemyTurn(gameRoom);
             cout << string(50,'\n'); //system("CLS");
             testPrintRoom(Player::getRoom().grid);
             //cursorInfo();
         }
         else if (Cursor::isEnabled())
         {
-            if(!cursorAction(key)) {continue;}
+            if(!cursorAction(key))
+            {
+                enemyTurn(gameRoom);
+                cout << string(50,'\n'); //system("CLS");
+                testPrintRoom(Player::getRoom().grid);
+                continue;
+            }
             cout << string(50,'\n'); //system("CLS");
             testPrintRoom(Cursor::getRoom().grid);
         }
     }
-    cout << string(50,'\n'); //system("CLS");
-    cout << "Game Over\n"; // gameOver()
-    cout << "\nPlay Again? (Y/N)\n";
-    short key = getKey();
-    if(key == 'y') {startGame();}
+    return false; // QUIT
 }

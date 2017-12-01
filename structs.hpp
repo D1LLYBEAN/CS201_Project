@@ -61,10 +61,12 @@ public:
     static void setRoom(Room & startRoom);
     static void setFloor(Floor & startFloor); // need this for cursor too? why is cursor not a part of player...
     static Position getPos();
+    static void setPos(Position newPos);
     static Room getRoom();
     static Floor getFloor(); // need this for cursor too? why is cursor not a part of player...
     static bool movechar(unsigned short dir);
     static void takeDamage(double damage);
+    static double getHealth();
     static double getPower();
 private:
     static double _health;
@@ -101,6 +103,7 @@ public:
     {
         _health = 100.0;
         _position = {0,0};
+        _power = 10.0;
     }
     Position getPos()
     {
@@ -122,9 +125,14 @@ public:
         }
         return true;
     }
+    double getPower()
+    {
+        return _power;
+    }
 private:
     double _health;
     Position _position;
+    double _power;
 };
 
 

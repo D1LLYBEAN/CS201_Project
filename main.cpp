@@ -28,7 +28,7 @@ using std::ifstream;
 
 int main()
 {
-    cout << "Font: Courier New (14 pt)\n";
+    cout << "Font: Courier New (20 pt)\n";
     cout << "Terminal: Width = 80, Height = 40\n";
     string file_path = __FILE__;
     string dir_path = file_path.substr(0, file_path.rfind("\\"));
@@ -64,7 +64,17 @@ int main()
         //if (key == 0x000D) {break;} // keyMap["ENTER"]
     }
 
-    startGame();
+    while(true)
+    {
+        if(startGame()){continue;} // Next Level
+        cout << string(50,'\n'); //system("CLS");
+        cout << "Game Over\n"; // gameOver()
+        cout << "\nPlay Again? (Y/N)\n";
+        short key = getKey();
+        if(key == 'y') {continue;}
+        else {break;}
+    }
+
 
     return 0;
 }
