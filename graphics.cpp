@@ -19,6 +19,8 @@ using std::endl;
 using std::string;
 #include <fstream>
 using std::ifstream;
+#include <sstream>
+using std::istringstream;
 #include <vector>
 using std::vector;
 #include <stdlib.h>
@@ -55,6 +57,9 @@ void startScreen()
 
 void printRoom(vector<vector<unsigned char>> pRoom)
 {
+    std::stringstream pHealth;
+    pHealth << Player::getHealth();
+    
     string outputString = "";
     outputString += string(MAPSIZE+2,WALL) + "\n" + string(1,WALL);
     for(int i=MAPSIZE-1; i>=0; i--)
@@ -66,10 +71,12 @@ void printRoom(vector<vector<unsigned char>> pRoom)
         outputString += string(1,WALL) + "\n" + string(1,WALL);
     }
     outputString += string(MAPSIZE+1,WALL) + "\n";
-    //outputString += "HEALTH: " + Player::getHealth() + "\n";
+    outputString += "HEALTH: " + pHealth.str() + "\n";
+    
     cout << outputString;
 }
 
+//for windows
 #ifdef _WIN32
 
 void clearScreen()
@@ -78,11 +85,14 @@ void clearScreen()
 }
 
 #endif // WIN32
+
+//for mach
 #ifdef __MACH__
 
 void clearScreen()
 {
     cout << string(50,'\n');
 }
+
 
 #endif
