@@ -23,11 +23,10 @@ const char PATH = ' ';
 const char WALL = '#';
 const char ENTRANCE = '@';
 const char EXIT = '@';
+const char STAIRS = 'O';
 const char PLAYER = 'i';
 const char CURSOR = 'X';
 const char ENEMY = '&';
-
-
 
 struct Position;
 class Player;
@@ -35,6 +34,7 @@ class Enemy;
 struct Room;
 struct Floor;
 
+extern Floor currentFloor;
 
 struct Position{
     int x;

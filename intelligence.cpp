@@ -103,7 +103,7 @@ void enemyTurn(Room & r)
 }
 
 
-void spawnEnemies(Room & r)
+void spawnEnemies(Room & r, int eCount)
 {
     // initialize posDeck with all available (path) spawn positions
     vector<Position> posDeck;
@@ -119,7 +119,7 @@ void spawnEnemies(Room & r)
     }
 
     // randomly spawn enemies on available (path) grid spaces
-    for(int i=0; i<5; i++)
+    for(int i=0; i<eCount; i++)
     {
         Enemy tempEnemy;
         int rint = (int)(std::rand() * posDeck.size() / RAND_MAX);  // random int represents random (path) grid space
@@ -286,7 +286,7 @@ void shittyPopulateMap(Position entr, Position exit, Room & r)
         }
     }
 
-    spawnEnemies(r);
+    spawnEnemies(r,5);
 
     // print room with enemies
 //    cout << "Clean Room (Populated):\n";
