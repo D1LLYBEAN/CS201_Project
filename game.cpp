@@ -21,6 +21,9 @@ using std::cout;
 #include "input.hpp"
 #include "intelligence.hpp"
 #include "makeMap.hpp"
+#include "graphics.hpp"
+
+Floor currentFloor;
 
 
 bool startGame()
@@ -53,7 +56,7 @@ bool playerAction(unsigned short k)
     case ' ':
         Cursor::enable();
         cout << string(50,'\n'); //system("CLS");
-        testPrintRoom(Cursor::getRoom().grid);
+        printRoom(Cursor::getRoom().grid);
         return false;
         break;
     case '\\':
@@ -98,16 +101,15 @@ bool cursorAction(unsigned short k)
 bool game()
 {
     Room gameRoom;
-    Floor testFloor;
-    makeFloor({0,0},{MAPSIZE,MAPSIZE},testFloor);
-    gameRoom = testFloor.rooms[0][0];
+    makeFloor({0,0},{MAPSIZE,MAPSIZE},currentFloor);
+    gameRoom = currentFloor.rooms[0][0];
     //shittyPopulateMap({0,0},{MAPSIZE-1,MAPSIZE-1},gameRoom);
     gameRoom.grid[Player::getPos().x][Player::getPos().y] = PLAYER;
     Player::setRoom(gameRoom);
     Cursor::setRoom(gameRoom);
     Player::setPos({gameRoom.exits[0].x, gameRoom.exits[0].y});
     cout << string(50,'\n'); //system("CLS");
-    testPrintRoom(gameRoom.grid);
+    printRoom(gameRoom.grid);
     while(true)
     {
         unsigned short key = getKey();
@@ -124,7 +126,7 @@ bool game()
             if(Player::getPos().x == currentRoom.exits[0].x && Player::getPos().y == currentRoom.exits[0].y){return true;} // PREVIOUS LEVEL
             enemyTurn(gameRoom);
             cout << string(50,'\n'); //system("CLS");
-            testPrintRoom(Player::getRoom().grid);
+            printRoom(Player::getRoom().grid);
             //cursorInfo();
         }
         else if (Cursor::isEnabled())
@@ -133,11 +135,11 @@ bool game()
             {
                 enemyTurn(gameRoom);
                 cout << string(50,'\n'); //system("CLS");
-                testPrintRoom(Player::getRoom().grid);
+                printRoom(Player::getRoom().grid);
                 continue;
             }
             cout << string(50,'\n'); //system("CLS");
-            testPrintRoom(Cursor::getRoom().grid);
+            printRoom(Cursor::getRoom().grid);
         }
     }
     return false; // QUIT

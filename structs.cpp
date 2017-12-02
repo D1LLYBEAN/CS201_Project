@@ -4,6 +4,7 @@
 #include <math.h>
 #include <stdlib.h>
 #include "intelligence.hpp"
+#include "graphics.hpp"
 
 // ---------- Player ---------- //
 
@@ -248,6 +249,6 @@ void Cursor::attack()
             _room.grid[x][y] = '+';
         }
     }
-    testPrintRoom(_room.grid);
+    printRoom(_room.grid);
     // don't move game forward if player doesn't try to attack?
 }

@@ -197,20 +197,20 @@ void testFlood()
 }
 
 
-void testPrintRoom(vector<vector<unsigned char>> printRoom)
-{
-    cout << string(MAPSIZE+2,WALL) << endl << WALL;
-    for(int i=MAPSIZE-1; i>=0; i--)
-    {
-        for(int j=0; j<MAPSIZE; j++)
-        {
-            cout << printRoom[j][i];
-        }
-        cout << WALL << endl << WALL;
-    }
-    cout << string(MAPSIZE+1,WALL) << endl;
-    cout << "HEALTH: " << Player::getHealth() << endl;
-}
+//void testPrintRoom(vector<vector<unsigned char>> printRoom)
+//{
+//    cout << string(MAPSIZE+2,WALL) << endl << WALL;
+//    for(int i=MAPSIZE-1; i>=0; i--)
+//    {
+//        for(int j=0; j<MAPSIZE; j++)
+//        {
+//            cout << printRoom[j][i];
+//        }
+//        cout << WALL << endl << WALL;
+//    }
+//    cout << string(MAPSIZE+1,WALL) << endl;
+//    cout << "HEALTH: " << Player::getHealth() << endl;
+//}
 
 
 void testPrintFlood(vector<vector<short>> printFlood)
