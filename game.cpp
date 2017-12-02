@@ -124,10 +124,10 @@ bool game()
             Room currentRoom = Player::getRoom();
             if(Player::getHealth() <= 0) {return false;}
             if(currentRoom.grid[Player::getPos().x][Player::getPos().y] == STAIRS) {return true;}
-            else if(Player::getPos().x == currentRoom.exits[0].x && Player::getPos().y == currentRoom.exits[0].y){}//nextRoom(0);} // NEXT LEVEL
-            else if(Player::getPos().x == currentRoom.exits[1].x && Player::getPos().y == currentRoom.exits[1].y){}//nextRoom(1);} // PREVIOUS LEVEL
-            else if(Player::getPos().x == currentRoom.exits[2].x && Player::getPos().y == currentRoom.exits[2].y){}//nextRoom(2);} // PREVIOUS LEVEL
-            else if(Player::getPos().x == currentRoom.exits[3].x && Player::getPos().y == currentRoom.exits[3].y){}//nextRoom(3);} // PREVIOUS LEVEL
+            else if(Player::getPos().x == currentRoom.exits[0].x && Player::getPos().y == currentRoom.exits[0].y){nextRoom(0);}
+            else if(Player::getPos().x == currentRoom.exits[1].x && Player::getPos().y == currentRoom.exits[1].y){nextRoom(1);}
+            else if(Player::getPos().x == currentRoom.exits[2].x && Player::getPos().y == currentRoom.exits[2].y){nextRoom(2);}
+            else if(Player::getPos().x == currentRoom.exits[3].x && Player::getPos().y == currentRoom.exits[3].y){nextRoom(3);}
             enemyTurn(gameRoom);
             clearScreen();
             printRoom(Player::getRoom().grid);
