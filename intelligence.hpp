@@ -16,7 +16,7 @@
 
 void enemyLogic(Enemy & e, Room & r);
 void enemyTurn(Room & r);
-void spawnEnemies(Room & r, int eCount);
+void spawnEnemies(Room & r);
 void flood(Position pPos, Room & room);
 void testFlood();
 void testPrintRoom(std::vector<std::vector<unsigned char>> printMap);
