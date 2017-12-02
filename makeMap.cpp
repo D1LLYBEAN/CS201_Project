@@ -130,7 +130,7 @@ void makeRoom(Position entr, Position exit, Room & r)
             }
         }
     }
-    //spawnEnemies(r);
+    spawnEnemies(r,1);
     //cout << "Room:\n";
     //showRoom(r.grid);
 }
