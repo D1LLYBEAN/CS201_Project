@@ -28,11 +28,11 @@ Floor currentFloor;
 
 bool startGame()
 {
-    clearScreen();
+    cout << string(50,'\n'); //system("CLS");
     cout << "Loading.";
     // generateMaps() here
     cout << ".";
-    //Player::setPos({0,0});
+    Player::setPos({0,0});
     cout << ".";
     // printRoom() here
     return game();
@@ -55,7 +55,7 @@ bool playerAction(unsigned short k)
         break;
     case ' ':
         Cursor::enable();
-        clearScreen();
+        cout << string(50,'\n'); //system("CLS");
         printRoom(Cursor::getRoom().grid);
         return false;
         break;
@@ -108,7 +108,7 @@ bool game()
     Player::setRoom(gameRoom);
     Cursor::setRoom(gameRoom);
     Player::setPos({gameRoom.exits[0].x, gameRoom.exits[0].y});
-    clearScreen();
+    cout << string(50,'\n'); //system("CLS");
     printRoom(gameRoom.grid);
     while(true)
     {
@@ -122,15 +122,10 @@ bool game()
         {
             if(!playerAction(key)) {continue;}
             Room currentRoom = Player::getRoom();
-            if(Player::getHealth() <= 0) {return false;}
-            if(currentRoom.grid[Player::getPos().x][Player::getPos().y] == STAIRS) {return true;}
-            else if(Player::getPos().x == currentRoom.exits[0].x && Player::getPos().y == currentRoom.exits[0].y){}//nextRoom(0);} // NEXT LEVEL
-            else if(Player::getPos().x == currentRoom.exits[1].x && Player::getPos().y == currentRoom.exits[1].y){}//nextRoom(1);} // PREVIOUS LEVEL
-            else if(Player::getPos().x == currentRoom.exits[2].x && Player::getPos().y == currentRoom.exits[2].y){}//nextRoom(2);} // PREVIOUS LEVEL
-            else if(Player::getPos().x == currentRoom.exits[3].x && Player::getPos().y == currentRoom.exits[3].y){}//nextRoom(3);} // PREVIOUS LEVEL
-
+            if(Player::getPos().x == currentRoom.exits[1].x && Player::getPos().y == currentRoom.exits[1].y){return true;} // NEXT LEVEL
+            if(Player::getPos().x == currentRoom.exits[0].x && Player::getPos().y == currentRoom.exits[0].y){return true;} // PREVIOUS LEVEL
             enemyTurn(gameRoom);
-            clearScreen();
+            cout << string(50,'\n'); //system("CLS");
             printRoom(Player::getRoom().grid);
             //cursorInfo();
         }
@@ -139,11 +134,11 @@ bool game()
             if(!cursorAction(key))
             {
                 enemyTurn(gameRoom);
-                clearScreen();
+                cout << string(50,'\n'); //system("CLS");
                 printRoom(Player::getRoom().grid);
                 continue;
             }
-            clearScreen();
+            cout << string(50,'\n'); //system("CLS");
             printRoom(Cursor::getRoom().grid);
         }
     }

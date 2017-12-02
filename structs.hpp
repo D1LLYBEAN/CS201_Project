@@ -23,7 +23,6 @@ const char PATH = ' ';
 const char WALL = '#';
 const char ENTRANCE = '@';
 const char EXIT = '@';
-const char STAIRS = 'O';
 const char PLAYER = 'i';
 const char CURSOR = 'X';
 const char ENEMY = '&';
