@@ -17,6 +17,7 @@
 #include <ctime>
 #include <cstdlib>
 #include <string>
+#include <time.h>
 using std::string;
 using std::cout;
 const int FLOORSIZE = 4;
@@ -137,6 +138,7 @@ void makeRoom(Position entr, Position exit, Room & r)
 
 void makeFloor(Position entr, Position exit, Floor & f)
 {
+	srand(time(NULL));
 	vector< vector<Room> > rooms = f.rooms;
 	//needs to generate the "maze" and hand each makeroom the entrance and exit positions
 	
@@ -233,29 +235,26 @@ void printFloor(Floor f)
 void nextRoom(int dir)
 {
 	Room currentRoom = Player::getRoom();
-	Position playerPos = Player::getPos();
-	if( playerPos.x == currentRoom.exits[1].x && playerPos.y+1 == currentRoom.exits[1].y)// pos == exit then move into the next room
-    	{
-    		if(currentRoom.exits[1].y == MAPSIZE-1)// TOP
-    		{
-    			currentRoom.pos.y++;
-			}
-			if(currentRoom.exits[1].x == MAPSIZE-1)// RIGHT
-    		{
-    			currentRoom.pos.x++;
-			}
-			if(currentRoom.exits[1].y == 0)// BOTTOM
-    		{
-    			currentRoom.pos.y--;
-			}
-			if(currentRoom.exits[1].x == 0)// LEFT
-    		{
-    			currentRoom.pos.x--;
-			}
-			
-    		Player::setRoom(currentFloor.rooms[currentRoom.pos.x][currentRoom.pos.y]);// = (*_floor).rooms[currentRoom.x][currentRoom.y];
-    		Player::setPos(currentRoom.exits[0]);
-		}
+	//Position playerPos = Player::getPos();
+	if(dir==0)// TOP
+	{
+		currentRoom.pos.y++;
+	}
+	if(dir==1)// RIGHT
+	{
+		currentRoom.pos.x++;
+	}
+	if(dir==2)// BOTTOM
+	{
+		currentRoom.pos.y--;
+	}
+	if(dir==3)// LEFT
+	{
+		currentRoom.pos.x--;
+	}
+	
+	Player::setRoom(currentFloor.rooms[currentRoom.pos.x][currentRoom.pos.y]);
+	Player::setPos(currentRoom.exits[0]);
 }
 
 void generateRoom()
