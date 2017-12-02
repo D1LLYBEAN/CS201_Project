@@ -14,6 +14,15 @@ Room * Player::_room = nullptr;
 Floor * Player::_floor = nullptr;
 double Player::_power = 50.0;
 
+void Player::reset()
+{
+    _health = 100.0;
+    _position = {MAPSIZE/2,MAPSIZE/2};
+    _room = nullptr;
+    _floor = nullptr;
+    _power = 50.0;
+}
+
 void Player::setFloor(Floor & startFloor) // may need this for cursor too...
 {
 	_floor = &startFloor;
@@ -246,9 +255,25 @@ void Cursor::attack()
         }
         else
         {
-            _room.grid[x][y] = '+';
+            _room.grid[x][y] = BULLET;
         }
     }
-    printRoom(_room.grid);
-    // don't move game forward if player doesn't try to attack?
+    _room.grid[Cursor::getPos().x][Cursor::getPos().y] = BULLET;
+}
+
+void Cursor::updateRoom()
+{
+    for(int i=0; i<MAPSIZE-1; i++)
+    {
+        for(int j=0; j<MAPSIZE-1; j++)
+        {
+            if((*_roompoint).grid[i][j] != _room.grid[i][j])
+            {
+                if((*_roompoint).grid[i][j] != PATH || _room.grid[i][j] != BULLET)
+                {
+                    _room.grid[i][j] = (*_roompoint).grid[i][j];
+                }
+            }
+        }
+    }
 }

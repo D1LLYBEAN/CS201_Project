@@ -27,6 +27,7 @@ const char STAIRS = 'O';
 const char PLAYER = 'i';
 const char CURSOR = 'X';
 const char ENEMY = '&';
+const char BULLET = '+';
 
 struct Position;
 class Player;
@@ -43,6 +44,7 @@ struct Position{
 
 class Player{
 public:
+    static void reset();
     static void setRoom(Room & startRoom);
     static void setFloor(Floor & startFloor); // need this for cursor too? why is cursor not a part of player...
     static Position getPos();
@@ -73,6 +75,7 @@ public:
     static Room getRoom();
     static bool movechar(unsigned short dir);
     static void attack();
+    static void updateRoom();
 private:
     static bool _enabled;
     static Position _position;

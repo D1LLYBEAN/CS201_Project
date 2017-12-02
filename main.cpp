@@ -23,6 +23,7 @@ using std::ifstream;
 #include "game.hpp"
 #include "input.hpp"
 #include "graphics.hpp"
+#include "structs.hpp"
 
 
 int main()
@@ -40,8 +41,9 @@ int main()
 
     while(true)
     {
+        Player::reset();
         if(startGame()){continue;} // Next Level
-        cout << string(50,'\n'); //system("CLS");
+        clearScreen();
         cout << "Game Over\n"; // gameOver()
         cout << "\nPlay Again? (Y/N)\n";
         short key = getKey();

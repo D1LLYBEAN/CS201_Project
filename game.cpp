@@ -15,7 +15,6 @@
 using std::cout;
 //#include <stdlib.h>
 // Custom Libraries
-//#include "makeMap.hpp"
 #include "structs.hpp"
 #include "game.hpp"
 #include "input.hpp"
@@ -103,7 +102,6 @@ bool game()
     Room gameRoom;
     makeFloor({0,0},{MAPSIZE,MAPSIZE},currentFloor);
     gameRoom = currentFloor.rooms[0][0];
-    //shittyPopulateMap({0,0},{MAPSIZE-1,MAPSIZE-1},gameRoom);
     gameRoom.grid[Player::getPos().x][Player::getPos().y] = PLAYER;
     Player::setRoom(gameRoom);
     Cursor::setRoom(gameRoom);
@@ -122,13 +120,13 @@ bool game()
         {
             if(!playerAction(key)) {continue;}
             Room currentRoom = Player::getRoom();
-            if(Player::getHealth() <= 0) {return false;}
             if(currentRoom.grid[Player::getPos().x][Player::getPos().y] == STAIRS) {return true;}
             else if(Player::getPos().x == currentRoom.exits[0].x && Player::getPos().y == currentRoom.exits[0].y){nextRoom(0);}
             else if(Player::getPos().x == currentRoom.exits[1].x && Player::getPos().y == currentRoom.exits[1].y){nextRoom(1);}
             else if(Player::getPos().x == currentRoom.exits[2].x && Player::getPos().y == currentRoom.exits[2].y){nextRoom(2);}
             else if(Player::getPos().x == currentRoom.exits[3].x && Player::getPos().y == currentRoom.exits[3].y){nextRoom(3);}
             enemyTurn(gameRoom);
+            if(Player::getHealth() <= 0) {return false;}
             clearScreen();
             printRoom(Player::getRoom().grid);
             //cursorInfo();
@@ -138,9 +136,7 @@ bool game()
             if(!cursorAction(key))
             {
                 enemyTurn(gameRoom);
-                clearScreen();
-                printRoom(Player::getRoom().grid);
-                continue;
+                Cursor::updateRoom();
             }
             clearScreen();
             printRoom(Cursor::getRoom().grid);
