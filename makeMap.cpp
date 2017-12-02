@@ -254,6 +254,7 @@ void nextRoom(int dir)
 			}
 			
     		Player::setRoom(currentFloor.rooms[currentRoom.pos.x][currentRoom.pos.y]);// = (*_floor).rooms[currentRoom.x][currentRoom.y];
+    		Player::setPos(currentRoom.exits[0]);
 		}
 }
 
