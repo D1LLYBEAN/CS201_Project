@@ -21,6 +21,7 @@ using std::cout;
 #include "input.hpp"
 #include "intelligence.hpp"
 #include "makeMap.hpp"
+#include "graphics.hpp"
 
 
 bool startGame()
@@ -53,7 +54,7 @@ bool playerAction(unsigned short k)
     case ' ':
         Cursor::enable();
         cout << string(50,'\n'); //system("CLS");
-        testPrintRoom(Cursor::getRoom().grid);
+        printRoom(Cursor::getRoom().grid);
         return false;
         break;
     case '\\':
@@ -107,7 +108,7 @@ bool game()
     Cursor::setRoom(gameRoom);
     Player::setPos({gameRoom.exits[0].x, gameRoom.exits[0].y});
     cout << string(50,'\n'); //system("CLS");
-    testPrintRoom(gameRoom.grid);
+    printRoom(gameRoom.grid);
     while(true)
     {
         unsigned short key = getKey();
@@ -124,7 +125,7 @@ bool game()
             if(Player::getPos().x == currentRoom.exits[0].x && Player::getPos().y == currentRoom.exits[0].y){return true;} // PREVIOUS LEVEL
             enemyTurn(gameRoom);
             cout << string(50,'\n'); //system("CLS");
-            testPrintRoom(Player::getRoom().grid);
+            printRoom(Player::getRoom().grid);
             //cursorInfo();
         }
         else if (Cursor::isEnabled())
@@ -133,11 +134,11 @@ bool game()
             {
                 enemyTurn(gameRoom);
                 cout << string(50,'\n'); //system("CLS");
-                testPrintRoom(Player::getRoom().grid);
+                printRoom(Player::getRoom().grid);
                 continue;
             }
             cout << string(50,'\n'); //system("CLS");
-            testPrintRoom(Cursor::getRoom().grid);
+            printRoom(Cursor::getRoom().grid);
         }
     }
     return false; // QUIT
