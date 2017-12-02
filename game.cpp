@@ -23,6 +23,8 @@ using std::cout;
 #include "makeMap.hpp"
 #include "graphics.hpp"
 
+Floor currentFloor;
+
 
 bool startGame()
 {
@@ -99,9 +101,8 @@ bool cursorAction(unsigned short k)
 bool game()
 {
     Room gameRoom;
-    Floor testFloor;
-    makeFloor({0,0},{MAPSIZE,MAPSIZE},testFloor);
-    gameRoom = testFloor.rooms[0][0];
+    makeFloor({0,0},{MAPSIZE,MAPSIZE},currentFloor);
+    gameRoom = currentFloor.rooms[0][0];
     //shittyPopulateMap({0,0},{MAPSIZE-1,MAPSIZE-1},gameRoom);
     gameRoom.grid[Player::getPos().x][Player::getPos().y] = PLAYER;
     Player::setRoom(gameRoom);
