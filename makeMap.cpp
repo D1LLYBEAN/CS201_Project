@@ -130,7 +130,7 @@ void makeRoom(Position entr, Position exit, Room & r)
             }
         }
     }
-    spawnEnemies(r);
+    //spawnEnemies(r);
     //cout << "Room:\n";
     //showRoom(r.grid);
 }
@@ -228,6 +228,33 @@ void printFloor(Floor f)
 		//cout << string((FLOORSIZE*MAPSIZE+FLOORSIZE),(char)WALL) << std::endl;
 	}
 	cout << std:: endl;
+}
+
+void nextRoom(int dir)
+{
+	Room currentRoom = Player::getRoom();
+	Position playerPos = Player::getPos();
+	if( playerPos.x == currentRoom.exits[1].x && playerPos.y+1 == currentRoom.exits[1].y)// pos == exit then move into the next room
+    	{
+    		if(currentRoom.exits[1].y == MAPSIZE-1)// TOP
+    		{
+    			currentRoom.pos.y++;
+			}
+			if(currentRoom.exits[1].x == MAPSIZE-1)// RIGHT
+    		{
+    			currentRoom.pos.x++;
+			}
+			if(currentRoom.exits[1].y == 0)// BOTTOM
+    		{
+    			currentRoom.pos.y--;
+			}
+			if(currentRoom.exits[1].x == 0)// LEFT
+    		{
+    			currentRoom.pos.x--;
+			}
+			
+    		Player::setRoom(currentFloor.rooms[currentRoom.pos.x][currentRoom.pos.y]);// = (*_floor).rooms[currentRoom.x][currentRoom.y];
+		}
 }
 
 void generateRoom()
