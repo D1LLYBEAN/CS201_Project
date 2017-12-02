@@ -21,3 +21,4 @@ void showRoom(vector<vector<unsigned char>> printRoom);
 void generateRoom();
 void printFloor(Floor f);
 void makeFloor(Position entr, Position exit, Floor & f);
+void nextRoom(int dir);
