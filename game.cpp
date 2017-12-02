@@ -23,14 +23,16 @@ using std::cout;
 #include "makeMap.hpp"
 #include "graphics.hpp"
 
+Floor currentFloor;
+
 
 bool startGame()
 {
-    cout << string(50,'\n'); //system("CLS");
+    clearScreen();
     cout << "Loading.";
     // generateMaps() here
     cout << ".";
-    Player::setPos({0,0});
+    //Player::setPos({0,0});
     cout << ".";
     // printRoom() here
     return game();
@@ -53,7 +55,7 @@ bool playerAction(unsigned short k)
         break;
     case ' ':
         Cursor::enable();
-        cout << string(50,'\n'); //system("CLS");
+        clearScreen();
         printRoom(Cursor::getRoom().grid);
         return false;
         break;
@@ -99,15 +101,14 @@ bool cursorAction(unsigned short k)
 bool game()
 {
     Room gameRoom;
-    Floor testFloor;
-    makeFloor({0,0},{MAPSIZE,MAPSIZE},testFloor);
-    gameRoom = testFloor.rooms[0][0];
+    makeFloor({0,0},{MAPSIZE,MAPSIZE},currentFloor);
+    gameRoom = currentFloor.rooms[0][0];
     //shittyPopulateMap({0,0},{MAPSIZE-1,MAPSIZE-1},gameRoom);
     gameRoom.grid[Player::getPos().x][Player::getPos().y] = PLAYER;
     Player::setRoom(gameRoom);
     Cursor::setRoom(gameRoom);
     Player::setPos({gameRoom.exits[0].x, gameRoom.exits[0].y});
-    cout << string(50,'\n'); //system("CLS");
+    clearScreen();
     printRoom(gameRoom.grid);
     while(true)
     {
@@ -121,10 +122,14 @@ bool game()
         {
             if(!playerAction(key)) {continue;}
             Room currentRoom = Player::getRoom();
-            if(Player::getPos().x == currentRoom.exits[1].x && Player::getPos().y == currentRoom.exits[1].y){return true;} // NEXT LEVEL
-            if(Player::getPos().x == currentRoom.exits[0].x && Player::getPos().y == currentRoom.exits[0].y){return true;} // PREVIOUS LEVEL
+            if(Player::getHealth() <= 0) {return false;}
+            if(currentRoom.grid[Player::getPos().x][Player::getPos().y] == STAIRS) {return true;}
+            else if(Player::getPos().x == currentRoom.exits[0].x && Player::getPos().y == currentRoom.exits[0].y){nextRoom(0);}
+            else if(Player::getPos().x == currentRoom.exits[1].x && Player::getPos().y == currentRoom.exits[1].y){nextRoom(1);}
+            else if(Player::getPos().x == currentRoom.exits[2].x && Player::getPos().y == currentRoom.exits[2].y){nextRoom(2);}
+            else if(Player::getPos().x == currentRoom.exits[3].x && Player::getPos().y == currentRoom.exits[3].y){nextRoom(3);}
             enemyTurn(gameRoom);
-            cout << string(50,'\n'); //system("CLS");
+            clearScreen();
             printRoom(Player::getRoom().grid);
             //cursorInfo();
         }
@@ -133,11 +138,11 @@ bool game()
             if(!cursorAction(key))
             {
                 enemyTurn(gameRoom);
-                cout << string(50,'\n'); //system("CLS");
+                clearScreen();
                 printRoom(Player::getRoom().grid);
                 continue;
             }
-            cout << string(50,'\n'); //system("CLS");
+            clearScreen();
             printRoom(Cursor::getRoom().grid);
         }
     }
