@@ -253,7 +253,7 @@ void nextRoom(int dir)
     			currentRoom.pos.x--;
 			}
 			
-    		Player::setRoom() = (*_floor).rooms[currentRoom.x][currentRoom.y];
+    		Player::setRoom(currentFloor.rooms[currentRoom.pos.x][currentRoom.pos.y]);// = (*_floor).rooms[currentRoom.x][currentRoom.y];
 		}
 }
 
