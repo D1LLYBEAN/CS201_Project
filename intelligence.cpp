@@ -26,57 +26,80 @@ using std::string;
 #include "structs.hpp"
 #include "input.hpp"
 
-const char MAPSIZE = 16;
-const char PATH = '_';
-const char WALL = 219;
-const char ENTRANCE = '@';
-const char EXIT = '@';
-const char ENEMY = '&';
-
-
 void enemyLogic(Enemy & e, Room & r)
 {
-    if(r.flood[e.pos.x][e.pos.y] > 0)
+    cout << "enemyLogic @ (" << e.getPos().x << "," << e.getPos().y << ")\n";
+    if(r.flood[e.getPos().x][e.getPos().y] > 1)
     {
-        short lowestFlood = r.flood[e.pos.x][e.pos.y];
-        char moveDir;
-        Position movePos;
-        if(e.pos.y < MAPSIZE-1 && r.flood[e.pos.x][e.pos.y+1] > -1 && r.flood[e.pos.x][e.pos.y+1] < lowestFlood) // UP
+        cout << "MOVE @ (" << e.getPos().x << "," << e.getPos().y << ")\n";
+        short lowestFlood = r.flood[e.getPos().x][e.getPos().y];
+        unsigned short moveDir;
+        if(e.getPos().y < MAPSIZE-1 && r.grid[e.getPos().x][e.getPos().y+1] == PATH && r.flood[e.getPos().x][e.getPos().y+1] < lowestFlood) // UP
         {
-            lowestFlood = r.flood[e.pos.x][e.pos.y+1];
+            lowestFlood = r.flood[e.getPos().x][e.getPos().y+1];
             moveDir = 'U';
-            movePos = {e.pos.x,e.pos.y+1};
         }
-        if(e.pos.y > 0 && r.flood[e.pos.x][e.pos.y-1] > -1 && r.flood[e.pos.x][e.pos.y-1] < lowestFlood) // DOWN
+        if(e.getPos().y > 0 && r.grid[e.getPos().x][e.getPos().y-1] == PATH && r.flood[e.getPos().x][e.getPos().y-1] < lowestFlood) // DOWN
         {
-            lowestFlood = r.flood[e.pos.x][e.pos.y-1];
+            lowestFlood = r.flood[e.getPos().x][e.getPos().y-1];
             moveDir = 'D';
-            movePos = {e.pos.x,e.pos.y-1};
         }
-        if(e.pos.x < MAPSIZE-1 && r.flood[e.pos.x+1][e.pos.y] > -1 && r.flood[e.pos.x+1][e.pos.y] < lowestFlood) // RIGHT
+        if(e.getPos().x < MAPSIZE-1 && r.grid[e.getPos().x+1][e.getPos().y] == PATH && r.flood[e.getPos().x+1][e.getPos().y] < lowestFlood) // RIGHT
         {
-            lowestFlood = r.flood[e.pos.x+1][e.pos.y];
+            lowestFlood = r.flood[e.getPos().x+1][e.getPos().y];
             moveDir = 'R';
-            movePos = {e.pos.x+1,e.pos.y};
         }
-        if(e.pos.x > 0 && r.flood[e.pos.x-1][e.pos.y] > -1 && r.flood[e.pos.x-1][e.pos.y] < lowestFlood) // LEFT
+        if(e.getPos().x > 0 && r.grid[e.getPos().x-1][e.getPos().y] == PATH && r.flood[e.getPos().x-1][e.getPos().y] < lowestFlood) // LEFT
         {
-            lowestFlood = r.flood[e.pos.x-1][e.pos.y];
+            lowestFlood = r.flood[e.getPos().x-1][e.getPos().y];
             moveDir = 'L';
-            movePos = {e.pos.x-1,e.pos.y};
         }
-        if(moveDir >= 0)
+
+        switch(moveDir)
         {
-            //moveChar(e,r);                // HELD UP BY INCOMPLETE moveChar() FUNCTION!
-            cout << r.flood[e.pos.x][e.pos.y] << " (" << e.pos.x << "," << e.pos.y << ") " << moveDir << " " << r.flood[movePos.x][movePos.y] << " (" << movePos.x << "," << movePos.y << ")\n";
+            case 'U': // Up North
+                cout << "up @ (" << e.getPos().x << "," << e.getPos().y << ")\n";
+                r.grid[e.getPos().x][e.getPos().y] = PATH;
+                e.setPos({e.getPos().x,e.getPos().y+1});
+                r.grid[e.getPos().x][e.getPos().y] = ENEMY;
+                break;
+            case 'D': // Down South
+                cout << "down @ (" << e.getPos().x << "," << e.getPos().y << ")\n";
+                r.grid[e.getPos().x][e.getPos().y] = PATH;
+                e.setPos({e.getPos().x,e.getPos().y-1});
+                r.grid[e.getPos().x][e.getPos().y] = ENEMY;
+                break;
+            case 'R': //Right East
+                cout << "right @ (" << e.getPos().x << "," << e.getPos().y << ")\n";
+                r.grid[e.getPos().x][e.getPos().y] = PATH;
+                e.setPos({e.getPos().x+1,e.getPos().y});
+                r.grid[e.getPos().x][e.getPos().y] = ENEMY;
+                break;
+            case 'L': // Left West
+                cout << "left @ (" << e.getPos().x << "," << e.getPos().y << ")\n";
+                r.grid[e.getPos().x][e.getPos().y] = PATH;
+                e.setPos({e.getPos().x-1,e.getPos().y});
+                r.grid[e.getPos().x][e.getPos().y] = ENEMY;
+                break;
+            default:
+                cout << "default @ (" << e.getPos().x << "," << e.getPos().y << ")\n";
+                break;
         }
+    }
+    else
+    {
+        cout << "ATTACK @ (" << e.getPos().x << "," << e.getPos().y << ")\n";
+        Player::takeDamage(e.getPower());
     }
 }
 
 void enemyTurn(Room & r)
 {
-    for(Enemy e : r.enemies)
+    for(Enemy & e : r.enemies)
+    {
+        flood(Player::getPos(),r);
         enemyLogic(e,r);
+    }
 }
 
 
@@ -99,9 +122,8 @@ void spawnEnemies(Room & r)
     for(int i=0; i<5; i++)
     {
         Enemy tempEnemy;
-        tempEnemy.health = 10.0;                                    // initialize enemy health
         int rint = (int)(std::rand() * posDeck.size() / RAND_MAX);  // random int represents random (path) grid space
-        tempEnemy.pos = {posDeck[rint].x,posDeck[rint].y};          // set enemy position to random (path) grid space position
+        tempEnemy.setPos({posDeck[rint].x,posDeck[rint].y});          // set enemy position to random (path) grid space position
         r.grid[posDeck[rint].x][posDeck[rint].y] = ENEMY;           // replace path at random grid space with enemy
         posDeck.erase(posDeck.begin() + rint);                      // remove selected (path) grid space from possible future selection
         r.enemies.push_back(tempEnemy);                             // add enemy to room.enemies vector
@@ -109,7 +131,7 @@ void spawnEnemies(Room & r)
 }
 
 
-void flood(Position zero, Room & room)//vector<vector<short>> & floodMap, vector<vector<unsigned char>> roomMap)
+void flood(Position zero, Room & room)
 {
     room.flood.clear();
     room.flood.resize(MAPSIZE,vector<short>(MAPSIZE,-1));
@@ -125,22 +147,22 @@ void flood(Position zero, Room & room)//vector<vector<short>> & floodMap, vector
             {
                 if(room.flood[i][j] == floodCount)
                 {
-                    if(j < MAPSIZE-1 && room.flood[i][j+1] == -1 && room.grid[i][j+1] == PATH) // up
+                    if(j < MAPSIZE-1 && room.flood[i][j+1] == -1 && (room.grid[i][j+1] == PATH || room.grid[i][j+1] == ENEMY)) // up
                     {
                         room.flood[i][j+1] = floodCount + 1;
                         floodComplete = false;
                     }
-                    if(j > 0 && room.flood[i][j-1] == -1 && room.grid[i][j-1] == PATH) // down
+                    if(j > 0 && room.flood[i][j-1] == -1 && (room.grid[i][j-1] == PATH || room.grid[i][j-1] == ENEMY)) // down
                     {
                         room.flood[i][j-1] = floodCount + 1;
                         floodComplete = false;
                     }
-                    if(i < MAPSIZE-1 && room.flood[i+1][j] == -1 && room.grid[i+1][j] == PATH) // right
+                    if(i < MAPSIZE-1 && room.flood[i+1][j] == -1 && (room.grid[i+1][j] == PATH || room.grid[i+1][j] == ENEMY)) // right
                     {
                         room.flood[i+1][j] = floodCount + 1;
                         floodComplete = false;
                     }
-                    if(i > 0 && room.flood[i-1][j] == -1 && room.grid[i-1][j] == PATH) // left
+                    if(i > 0 && room.flood[i-1][j] == -1 && (room.grid[i-1][j] == PATH || room.grid[i-1][j] == ENEMY)) // left
                     {
                         room.flood[i-1][j] = floodCount + 1;
                         floodComplete = false;
@@ -175,19 +197,20 @@ void testFlood()
 }
 
 
-void testPrintRoom(vector<vector<unsigned char>> printRoom)
-{
-    cout << string(2*(MAPSIZE+1),WALL) << endl << WALL;
-    for(int i=MAPSIZE-1; i>=0; i--)
-    {
-        for(int j=0; j<MAPSIZE; j++)
-        {
-            cout << printRoom[i][j] << printRoom[i][j];
-        }
-        cout << WALL << endl << WALL;
-    }
-    cout << string(2*(MAPSIZE+1)-1,WALL) << endl;
-}
+//void testPrintRoom(vector<vector<unsigned char>> printRoom)
+//{
+//    cout << string(MAPSIZE+2,WALL) << endl << WALL;
+//    for(int i=MAPSIZE-1; i>=0; i--)
+//    {
+//        for(int j=0; j<MAPSIZE; j++)
+//        {
+//            cout << printRoom[j][i];
+//        }
+//        cout << WALL << endl << WALL;
+//    }
+//    cout << string(MAPSIZE+1,WALL) << endl;
+//    cout << "HEALTH: " << Player::getHealth() << endl;
+//}
 
 
 void testPrintFlood(vector<vector<short>> printFlood)
@@ -197,8 +220,8 @@ void testPrintFlood(vector<vector<short>> printFlood)
     {
         for(int j=0; j<MAPSIZE; j++)
         {
-            if (printFlood[i][j] == -1){ cout << WALL << WALL; }
-            else{ cout << std::setw(2) << printFlood[i][j]; }
+            if (printFlood[j][i] == -1){ cout << WALL << WALL; }
+            else{ cout << std::setw(2) << printFlood[j][i]; }
         }
         cout << WALL << endl << WALL;
     }
@@ -208,13 +231,14 @@ void testPrintFlood(vector<vector<short>> printFlood)
 
 void shittyPopulateMap(Position entr, Position exit, Room & r)
 {
-    cout << "\nSHITTY POPULATE MAP\n";
+    //cout << "\nSHITTY POPULATE MAP\n";
 
     // reset 2D grid and flood vectors to base value
     r.grid.clear();
     r.flood.clear();
     r.grid.resize(MAPSIZE,vector<unsigned char>(MAPSIZE,WALL));
     r.flood.resize(MAPSIZE,vector<short>(MAPSIZE,-1));
+
     // initialize start and end positions
     r.grid[entr.x][entr.y] = PATH;
     r.grid[exit.x][exit.y] = PATH;
@@ -245,10 +269,10 @@ void shittyPopulateMap(Position entr, Position exit, Room & r)
     r.grid[exit.x][exit.y] = EXIT;
 
     // print shitty room, and print what can be seen by flood()
-    cout << "Shitty Room:\n";
-    testPrintRoom(r.grid);
-    cout << "Flood Vision:\n";
-    testPrintFlood(r.flood);
+//    cout << "Shitty Room:\n";
+//    testPrintRoom(r.grid);
+//    cout << "Flood Vision:\n";
+//    testPrintFlood(r.flood);
 
     // clean up unreachable grid spaces
     for (int i=0; i<MAPSIZE; i++)
@@ -265,6 +289,6 @@ void shittyPopulateMap(Position entr, Position exit, Room & r)
     spawnEnemies(r);
 
     // print room with enemies
-    cout << "Clean Room (Populated):\n";
-    testPrintRoom(r.grid);
+//    cout << "Clean Room (Populated):\n";
+//    testPrintRoom(r.grid);
 }
