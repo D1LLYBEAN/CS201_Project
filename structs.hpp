@@ -21,8 +21,7 @@ using std::vector;
 const char MAPSIZE = 16;
 const char PATH = ' ';
 const char WALL = '#';
-const char ENTRANCE = '@';
-const char EXIT = '@';
+const char DOOR = '@';
 const char STAIRS = 'O';
 const char PLAYER = 'i';
 const char CURSOR = 'X';
@@ -33,6 +32,7 @@ struct Position;
 class Player;
 class Enemy;
 struct Room;
+struct Door;
 struct Floor;
 
 extern Floor currentFloor;
@@ -50,6 +50,8 @@ public:
     static Position getPos();
     static void setPos(Position newPos);
     static Room getRoom();
+    static void setRoomPos(Position);
+    static Position getRoomPos();
     static Floor getFloor(); // need this for cursor too? why is cursor not a part of player...
     static bool movechar(unsigned short dir);
     static void takeDamage(double damage);
@@ -58,6 +60,7 @@ public:
 private:
     static double _health;
     static Position _position;
+    static Position _roomPosition;
     static Room * _room;
     static Floor * _floor;
     static double _power;
@@ -126,7 +129,7 @@ private:
 struct Room{
     vector<vector<unsigned char>> grid;
     vector<vector<short>> flood;
-    vector<Position> exits;
+    vector<Door> doors;
     vector<Enemy> enemies;
     Position pos;
     //...
@@ -142,6 +145,11 @@ struct Floor{
 };
 
 
+struct Door
+{
+    Position pos;
+    Position nextRoom;
+};
 
 
 #endif // STRUCTS_H

@@ -59,7 +59,7 @@ void printRoom(vector<vector<unsigned char>> pRoom)
 {
     std::stringstream pHealth;
     pHealth << Player::getHealth();
-    
+
     string outputString = "";
     outputString += string(MAPSIZE+2,WALL) + "\n" + string(1,WALL);
     for(int i=MAPSIZE-1; i>=0; i--)
@@ -72,7 +72,31 @@ void printRoom(vector<vector<unsigned char>> pRoom)
     }
     outputString += string(MAPSIZE+1,WALL) + "\n";
     outputString += "HEALTH: " + pHealth.str() + "\n";
-    
+
+    if(Cursor::isEnabled())
+    {
+        outputString += "Cursor: ";
+        switch(Player::getRoom().grid[Cursor::getPos().x][Cursor::getPos().y]) // get character on grid at cursor position
+        {
+        case PLAYER:
+            outputString += "Player\n";
+            break;
+        case ENEMY:
+            for(unsigned int i=0; i < Player::getRoom().enemies.size(); i++) // find enemy in room vector
+            {
+                if(Player::getRoom().enemies[i].getPos().x == Cursor::getPos().x && Player::getRoom().enemies[i].getPos().y == Cursor::getPos().y) // if true, this is the enemy at the cursor position
+                {
+                    outputString += "Enemy\n";
+                    // ADD ENEMY STATISTICS HERE (HEALTH, POWER, ETC.)!
+                }
+            }
+            break;
+        // ADD MORE CASES HERE!
+        default:
+            break;
+        }
+    }
+
     cout << outputString;
 }
 
@@ -93,6 +117,5 @@ void clearScreen()
 {
     cout << string(50,'\n');
 }
-
 
 #endif

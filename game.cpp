@@ -29,11 +29,15 @@ bool startGame()
 {
     clearScreen();
     cout << "Loading.";
-    // generateMaps() here
+    testMakeFloor({0,0},{MAPSIZE,MAPSIZE},currentFloor);
     cout << ".";
-    //Player::setPos({0,0});
+    Player::setRoom(currentFloor.rooms[0][0]);
+    Cursor::setRoom(currentFloor.rooms[0][0]);
+    Player::setPos({MAPSIZE/2,MAPSIZE/2});
+    currentFloor.rooms[0][0].grid[Player::getPos().x][Player::getPos().y] = PLAYER;
     cout << ".";
-    // printRoom() here
+    clearScreen();
+    printRoom(currentFloor.rooms[0][0].grid);
     return game();
 }
 
@@ -99,21 +103,12 @@ bool cursorAction(unsigned short k)
 
 bool game()
 {
-    Room gameRoom;
-    makeFloor({0,0},{MAPSIZE,MAPSIZE},currentFloor);
-    gameRoom = currentFloor.rooms[0][0];
-    gameRoom.grid[Player::getPos().x][Player::getPos().y] = PLAYER;
-    Player::setRoom(gameRoom);
-    Cursor::setRoom(gameRoom);
-    Player::setPos({gameRoom.exits[0].x, gameRoom.exits[0].y});
-    clearScreen();
-    printRoom(gameRoom.grid);
     while(true)
     {
         unsigned short key = getKey();
 
-        if (key == 'f') { testFlood(); continue;} // REMOVE THIS LATER!
-        if (key == 'g') { generateRoom(); continue;} // REMOVE THIS LATER!
+        //if (key == 'f') { testFlood(); continue;} // REMOVE THIS LATER!
+        //if (key == 'g') { generateRoom(); continue;} // REMOVE THIS LATER!
 
         if(key == '\\' || key == 0x001B){break;}
         else if (!Cursor::isEnabled())
@@ -121,11 +116,19 @@ bool game()
             if(!playerAction(key)) {continue;}
             Room currentRoom = Player::getRoom();
             if(currentRoom.grid[Player::getPos().x][Player::getPos().y] == STAIRS) {return true;}
-            else if(Player::getPos().x == currentRoom.exits[0].x && Player::getPos().y == currentRoom.exits[0].y){nextRoom(0);}
-            else if(Player::getPos().x == currentRoom.exits[1].x && Player::getPos().y == currentRoom.exits[1].y){nextRoom(1);}
-            else if(Player::getPos().x == currentRoom.exits[2].x && Player::getPos().y == currentRoom.exits[2].y){nextRoom(2);}
-            else if(Player::getPos().x == currentRoom.exits[3].x && Player::getPos().y == currentRoom.exits[3].y){nextRoom(3);}
-            enemyTurn(gameRoom);
+            for(Door d : Player::getRoom().doors)
+            {
+                if(Player::getPos().x == d.pos.x && Player::getPos().y == d.pos.y)
+                {
+                    Player::setRoom(currentFloor.rooms[d.nextRoom.x][d.nextRoom.y]);
+                    Cursor::setRoom(currentFloor.rooms[d.nextRoom.x][d.nextRoom.y]);
+                    Player::setPos({MAPSIZE/2,MAPSIZE/2});
+                    Player::setRoomPos(d.nextRoom);
+                    currentFloor.rooms[d.nextRoom.x][d.nextRoom.y].grid[Player::getPos().x][Player::getPos().y] = PLAYER;
+                    break;
+                }
+            }
+            enemyTurn(currentFloor.rooms[Player::getRoomPos().x][Player::getRoomPos().y]);
             if(Player::getHealth() <= 0) {return false;}
             clearScreen();
             printRoom(Player::getRoom().grid);
@@ -135,7 +138,7 @@ bool game()
         {
             if(!cursorAction(key))
             {
-                enemyTurn(gameRoom);
+                enemyTurn(currentFloor.rooms[Player::getRoomPos().x][Player::getRoomPos().y]);
                 Cursor::updateRoom();
             }
             clearScreen();

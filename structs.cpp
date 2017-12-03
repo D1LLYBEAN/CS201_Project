@@ -10,6 +10,7 @@
 
 double Player::_health = 100.0;
 Position Player::_position = {MAPSIZE/2,MAPSIZE/2};
+Position Player::_roomPosition = {0,0};
 Room * Player::_room = nullptr;
 Floor * Player::_floor = nullptr;
 double Player::_power = 50.0;
@@ -43,6 +44,16 @@ Position Player::getPos()
     return _position;
 }
 
+void Player::setRoomPos(Position newRoomPos)
+{
+    _roomPosition = newRoomPos;
+}
+
+Position Player::getRoomPos()
+{
+    return _roomPosition;
+}
+
 void Player::setPos(Position newPos)
 {
     _position = newPos;
@@ -58,7 +69,7 @@ bool Player::movechar(unsigned short dir)
     switch(dir){
         case 'w': // North
         case 0xE048: //[UP ARROW]
-            if(_position.y < MAPSIZE-1 && ((*_room).grid[_position.x][_position.y+1] == PATH|| (*_room).grid[_position.x][_position.y+1] == EXIT))
+            if(_position.y < MAPSIZE-1 && ((*_room).grid[_position.x][_position.y+1] == PATH || (*_room).grid[_position.x][_position.y+1] == DOOR))
             {
                 (*_room).grid[_position.x][_position.y] = PATH;
                 _position.y++;
@@ -68,7 +79,7 @@ bool Player::movechar(unsigned short dir)
             break;
         case 's': //South
         case 0xE050: // [DOWN ARROW]
-            if(_position.y > 0 && ((*_room).grid[_position.x][_position.y-1] == PATH|| (*_room).grid[_position.x][_position.y-1] == EXIT))
+            if(_position.y > 0 && ((*_room).grid[_position.x][_position.y-1] == PATH || (*_room).grid[_position.x][_position.y-1] == DOOR))
             {
                 (*_room).grid[_position.x][_position.y] = PATH;
                 _position.y--;
@@ -78,7 +89,7 @@ bool Player::movechar(unsigned short dir)
             break;
         case 'd': //East
         case 0xE04D: // [RIGHT ARROW]
-            if(_position.x < MAPSIZE-1 && ((*_room).grid[_position.x+1][_position.y] == PATH || (*_room).grid[_position.x+1][_position.y] == EXIT))
+            if(_position.x < MAPSIZE-1 && ((*_room).grid[_position.x+1][_position.y] == PATH || (*_room).grid[_position.x+1][_position.y] == DOOR))
             {
                 (*_room).grid[_position.x][_position.y] = PATH;
                 _position.x++;
@@ -88,7 +99,7 @@ bool Player::movechar(unsigned short dir)
             break;
         case 'a': //West
         case 0xE04B: // [LEFT ARROW]
-            if(_position.x > 0 && ((*_room).grid[_position.x-1][_position.y] == PATH || (*_room).grid[_position.x-1][_position.y] == EXIT))
+            if(_position.x > 0 && ((*_room).grid[_position.x-1][_position.y] == PATH || (*_room).grid[_position.x-1][_position.y] == DOOR))
             {
                 (*_room).grid[_position.x][_position.y] = PATH;
                 _position.x--;

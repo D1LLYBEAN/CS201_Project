@@ -25,6 +25,9 @@ using std::string;
 #include "intelligence.hpp"
 #include "structs.hpp"
 #include "input.hpp"
+//#include "makeMap.hpp"
+
+const int FLOORSIZE = 8;
 
 void enemyLogic(Enemy & e, Room & r)
 {
@@ -180,37 +183,17 @@ void testFlood()
     cout << "\n\n";
     cout << "FLOOD TESTING\n\n";
     cout << "Flood Testing Hotkeys:\n";
-    cout << "f - Shitty Generate\n";
+    cout << "f - test print flood\n";
     cout << "\n";
     while(true)
     {
         short key = getKey();
         if(key == '\\') { break; }
         if(key != 'f') { continue; }
-        Room testRoom;
-        Position startPos = {0,0};
-        Position endPos = {MAPSIZE-1,MAPSIZE-1};
-        shittyPopulateMap(startPos,endPos,testRoom);
-        enemyTurn(testRoom);
+        testPrintFlood(Player::getRoom().flood);
     }
-    cout << "\n\nFLOOD TESTING ENDED\n\n";
+    cout << "\n\nEND FLOOD TESTING\n\n";
 }
-
-
-//void testPrintRoom(vector<vector<unsigned char>> printRoom)
-//{
-//    cout << string(MAPSIZE+2,WALL) << endl << WALL;
-//    for(int i=MAPSIZE-1; i>=0; i--)
-//    {
-//        for(int j=0; j<MAPSIZE; j++)
-//        {
-//            cout << printRoom[j][i];
-//        }
-//        cout << WALL << endl << WALL;
-//    }
-//    cout << string(MAPSIZE+1,WALL) << endl;
-//    cout << "HEALTH: " << Player::getHealth() << endl;
-//}
 
 
 void testPrintFlood(vector<vector<short>> printFlood)
@@ -228,20 +211,21 @@ void testPrintFlood(vector<vector<short>> printFlood)
     cout << string(2*(MAPSIZE+1)-1,WALL) << endl;
 }
 
-
-void shittyPopulateMap(Position entr, Position exit, Room & r)
+void testMakeRoom(Room & r)
 {
-    //cout << "\nSHITTY POPULATE MAP\n";
+	//This is mostly just a test to see if it works
+	//cout << "\nMake a Room\n";
 
     // reset 2D grid and flood vectors to base value
     r.grid.clear();
     r.flood.clear();
     r.grid.resize(MAPSIZE,vector<unsigned char>(MAPSIZE,WALL));
     r.flood.resize(MAPSIZE,vector<short>(MAPSIZE,-1));
-
     // initialize start and end positions
-    r.grid[entr.x][entr.y] = PATH;
-    r.grid[exit.x][exit.y] = PATH;
+    for(Door d : r.doors)
+    {
+        r.grid[d.pos.x][d.pos.y] = PATH;
+    }
 
     // create a vector of all grid positions
     vector<Position> posDeck;
@@ -255,24 +239,28 @@ void shittyPopulateMap(Position entr, Position exit, Room & r)
 
     // randomly replace walls with paths, one grid space at a time
     // use flood() to determine when end position can be reached from start
-    std::srand(std::time(0));
-    while (r.flood[exit.x][exit.y] == -1)                           // check if end position can be reached from start position
+    bool keepFlooding = true;
+    while (keepFlooding)                           // check if end position can be reached from start position
     {
+        keepFlooding = false;
+        for(Door d : r.doors)
+        {
+            if(r.flood[d.pos.x][d.pos.y] == -1)
+            {
+                keepFlooding = true;
+            }
+        }
         int rint = (int)(std::rand() * posDeck.size() / RAND_MAX);  // random int represents random grid space
         r.grid[posDeck[rint].x][posDeck[rint].y] = PATH;            // replace wall at random grid space with path
         posDeck.erase(posDeck.begin() + rint);                      // remove selected grid space from possible future selection
-        flood(entr, r);                                             // flood from start position
+        flood({MAPSIZE/2,MAPSIZE/2}, r);                                             // flood from start position
     }
 
     // Place Entrance and Exit spaces at respective positions
-    r.grid[entr.x][entr.y] = ENTRANCE;
-    r.grid[exit.x][exit.y] = EXIT;
-
-    // print shitty room, and print what can be seen by flood()
-//    cout << "Shitty Room:\n";
-//    testPrintRoom(r.grid);
-//    cout << "Flood Vision:\n";
-//    testPrintFlood(r.flood);
+    for(Door d : r.doors)
+    {
+        r.grid[d.pos.x][d.pos.y] = DOOR;
+    }
 
     // clean up unreachable grid spaces
     for (int i=0; i<MAPSIZE; i++)
@@ -285,10 +273,51 @@ void shittyPopulateMap(Position entr, Position exit, Room & r)
             }
         }
     }
+    spawnEnemies(r,1);
+}
 
-    spawnEnemies(r,5);
+void testMakeFloor(Position entr, Position exit, Floor & f)
+{
+    f.rooms.clear();
+    Room emptyRoom = {}; // feckn whatever dude
+    f.rooms.resize(FLOORSIZE,vector<Room>(FLOORSIZE,emptyRoom));
 
-    // print room with enemies
-//    cout << "Clean Room (Populated):\n";
-//    testPrintRoom(r.grid);
+	srand(time(NULL));
+	//needs to generate the "maze" and hand each makeroom the entrance and exit positions
+
+	for (int i=0; i <FLOORSIZE-1; i++)
+    {
+        for(int j=0; j<FLOORSIZE-1; j++)
+        {
+            if (i > 0)
+            {
+                Door tempDoor;
+                tempDoor.nextRoom = {i-1,j};
+                tempDoor.pos = {0,MAPSIZE/2};
+                f.rooms[i][j].doors.push_back(tempDoor);
+            }
+            if (i < FLOORSIZE-1)
+            {
+                Door tempDoor;
+                tempDoor.nextRoom = {i+1,j};
+                tempDoor.pos = {MAPSIZE-1,MAPSIZE/2};
+                f.rooms[i][j].doors.push_back(tempDoor);
+            }
+            if (j > 0)
+            {
+                Door tempDoor;
+                tempDoor.nextRoom = {i,j-1};
+                tempDoor.pos = {MAPSIZE/2,0};
+                f.rooms[i][j].doors.push_back(tempDoor);
+            }
+            if (j < FLOORSIZE-1)
+            {
+                Door tempDoor;
+                tempDoor.nextRoom = {i,j+1};
+                tempDoor.pos = {MAPSIZE/2,MAPSIZE-1};
+                f.rooms[i][j].doors.push_back(tempDoor);
+            }
+            testMakeRoom(f.rooms[i][j]);
+        }
+    }
 }
