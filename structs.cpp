@@ -216,30 +216,29 @@ void Cursor::attack()
     double length = std::max(abs(x2-x1), abs(y2-y1));
     int x = 0;
     int y = 0;
+    double t = 0.0;
     for(int i=0; i <= length; i++)
     {
-        // interpolate between (x1,y1) and (x2,y2)
-        double t = double(i)/length;
-        // at t=0.0 we get (x1,y1); at t=1.0 we get (x2,y2)
-        if ((*_roompoint).grid[round(x1 * (1.0-t) + x2 * t)][y] == WALL && (*_roompoint).grid[x][round(y1 * (1.0-t) + y2 * t)] == WALL)
+        double tp1 = double(i)/length; // t plus 1
+        if ((*_roompoint).grid[round(x1 * (1.0-tp1) + x2 * tp1)][round(y1 * (1.0-t) + y2 * t)] == WALL && (*_roompoint).grid[round(x1 * (1.0-t) + x2 * t)][round(y1 * (1.0-tp1) + y2 * tp1)] == WALL)
         {
-            std::cout << "HIT WALL @ (" << x << "," << y << ")\n";
             break;
         }
         else
         {
+            // interpolate between (x1,y1) and (x2,y2)
+            t = double(i)/length;
+            // at t=0.0 we get (x1,y1); at t=1.0 we get (x2,y2)
             x = round(x1 * (1.0-t) + x2 * t);
             y = round(y1 * (1.0-t) + y2 * t);
         }
         // now check tile (x,y)
         if((*_roompoint).grid[x][y] == WALL)
         {
-            std::cout << "HIT WALL @ (" << x << "," << y << ")\n";
             break;
         }
         else if((*_roompoint).grid[x][y] == ENEMY)
         {
-            std::cout << "HIT ENEMY @ (" << x << "," << y << ")\n";
             for(unsigned int i=0; i < (*_roompoint).enemies.size(); i++)
             {
                 if((*_roompoint).enemies[i].getPos().x == x && (*_roompoint).enemies[i].getPos().y == y)
@@ -258,7 +257,6 @@ void Cursor::attack()
             _room.grid[x][y] = BULLET;
         }
     }
-    _room.grid[Cursor::getPos().x][Cursor::getPos().y] = BULLET;
 }
 
 void Cursor::updateRoom()
