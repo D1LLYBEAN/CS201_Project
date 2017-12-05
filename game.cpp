@@ -157,10 +157,8 @@ bool game()
                 }
             }
             enemyTurn(currentFloor.rooms[Player::getRoomPos().x][Player::getRoomPos().y]);
-            if(Player::getHealth() <= 0) {return false;}
             clearScreen();
             printRoom(Player::getRoom().grid);
-            //cursorInfo();
         }
         else if (Cursor::isEnabled())
         {
@@ -172,6 +170,7 @@ bool game()
             clearScreen();
             printRoom(Cursor::getRoom().grid);
         }
+        if(Player::getHealth() <= 0) {return false;}
     }
     return false; // QUIT
 }

@@ -64,12 +64,12 @@ void printRoom(vector<vector<unsigned char>> pRoom)
     pMaxHealth << Player::getMaxHealth();
     stringstream pDefense;
     pDefense << Player::getDefense();
-    
-    
-    
-    
-    
-    
+
+
+
+
+
+
     string outputString = "";
     outputString += string(MAPSIZE+2,WALL) + "\n" + string(1,WALL);
     for(int i=MAPSIZE-1; i>=0; i--)
@@ -86,7 +86,7 @@ void printRoom(vector<vector<unsigned char>> pRoom)
     outputString += "Health: " + pHealth.str() + "\n";
     outputString += "Max Health: " + pMaxHealth.str() + "\n";
     outputString += "Defense : " + pDefense.str() + "\n";
-    
+
     if(Cursor::isEnabled())
     {
         outputString += "Cursor: ";
@@ -106,7 +106,7 @@ void printRoom(vector<vector<unsigned char>> pRoom)
                         ePower << Player::getRoom().enemies[i].getPower();
                         stringstream eDefense;
                         eDefense << Player::getRoom().enemies[i].getDefense();
-                        
+
                         outputString += "Enemy \n";
                         outputString += "Health: "+ eHealth.str() + "\n";
                         outputString += "Power: " + ePower.str() + "\n";
@@ -119,14 +119,15 @@ void printRoom(vector<vector<unsigned char>> pRoom)
                 break;
             case DOOR:
                 outputString += "Door \n";
+                break;
             case STAIRS:
-                outputString += "Stairs to next floor \n";
+                outputString += "Hole to next floor \n";
                 break;
             default:
                 break;
         }
     }
-    
+
     cout << outputString;
 }
 
