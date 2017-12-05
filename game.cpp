@@ -115,8 +115,8 @@ bool game()
         {
             if(!playerAction(key)) {continue;}
             Room currentRoom = Player::getRoom();
-            if(currentRoom.grid[Player::getPos().x][Player::getPos().y] == STAIRS) {return true;}
-            for(Door d : Player::getRoom().doors)
+            if(currentRoom.grid[Player::getPos().x][Player::getPos().y] == STAIRS) {return true;} // need to finish stair use
+            for(Door d : currentRoom.doors)
             {
                 if(Player::getPos().x == d.pos.x && Player::getPos().y == d.pos.y)
                 {
@@ -124,18 +124,22 @@ bool game()
                     Cursor::setRoom(currentFloor.rooms[d.nextRoom.x][d.nextRoom.y]);
                     if(Player::getPos().y == MAPSIZE-1)//NORTH
                     {
+                    	currentRoom.grid[Player::getPos().x][Player::getPos().y] = DOOR;//DNW
                     	Player::setPos({d.pos.x,MAPSIZE-1-d.pos.y});
 					}
 					else if(Player::getPos().x == MAPSIZE-1)//EAST
 					{
+						currentRoom.grid[Player::getPos().x][Player::getPos().y] = DOOR;//DNW
 						Player::setPos({MAPSIZE-1-d.pos.x,d.pos.y});
 					}
 					else if(Player::getPos().y == 0)//SOUTH
 					{
+						currentRoom.grid[Player::getPos().x][Player::getPos().y] = DOOR;//DNW
 						Player::setPos({d.pos.x,d.pos.y+MAPSIZE-1});
 					}
 					else//WEST
 					{
+						currentRoom.grid[Player::getPos().x][Player::getPos().y] = DOOR;//DNW
 						Player::setPos({d.pos.x+MAPSIZE-1,d.pos.y});
 					}
                     Player::setRoomPos(d.nextRoom);
