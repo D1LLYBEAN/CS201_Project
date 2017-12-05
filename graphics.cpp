@@ -21,6 +21,7 @@ using std::string;
 using std::ifstream;
 #include <sstream>
 using std::istringstream;
+using std::stringstream;
 #include <vector>
 using std::vector;
 #include <stdlib.h>
@@ -57,9 +58,18 @@ void startScreen()
 
 void printRoom(vector<vector<unsigned char>> pRoom)
 {
-    std::stringstream pHealth;
+    stringstream pHealth;
     pHealth << Player::getHealth();
-
+    stringstream pMaxHealth;
+    pMaxHealth << Player::getMaxHealth();
+    stringstream pDefense;
+    pDefense << Player::getDefense();
+    
+    
+    
+    
+    
+    
     string outputString = "";
     outputString += string(MAPSIZE+2,WALL) + "\n" + string(1,WALL);
     for(int i=MAPSIZE-1; i>=0; i--)
@@ -71,32 +81,52 @@ void printRoom(vector<vector<unsigned char>> pRoom)
         outputString += string(1,WALL) + "\n" + string(1,WALL);
     }
     outputString += string(MAPSIZE+1,WALL) + "\n";
-    outputString += "HEALTH: " + pHealth.str() + "\n";
-
+//    outputString += "HEALTH: " + pHealth.str() + "\n";
+    outputString += "Player: \n";
+    outputString += "Health: " + pHealth.str() + "\n";
+    outputString += "Max Health: " + pMaxHealth.str() + "\n";
+    outputString += "Defense : " + pDefense.str() + "\n";
+    
     if(Cursor::isEnabled())
     {
         outputString += "Cursor: ";
         switch(Player::getRoom().grid[Cursor::getPos().x][Cursor::getPos().y]) // get character on grid at cursor position
         {
-        case PLAYER:
-            outputString += "Player\n";
-            break;
-        case ENEMY:
-            for(unsigned int i=0; i < Player::getRoom().enemies.size(); i++) // find enemy in room vector
-            {
-                if(Player::getRoom().enemies[i].getPos().x == Cursor::getPos().x && Player::getRoom().enemies[i].getPos().y == Cursor::getPos().y) // if true, this is the enemy at the cursor position
+            case PLAYER:
+                outputString += "Player\n";
+                break;
+            case ENEMY:
+                for(unsigned int i=0; i < Player::getRoom().enemies.size(); i++) // find enemy in room vector
                 {
-                    outputString += "Enemy\n";
-                    // ADD ENEMY STATISTICS HERE (HEALTH, POWER, ETC.)!
+                    if(Player::getRoom().enemies[i].getPos().x == Cursor::getPos().x && Player::getRoom().enemies[i].getPos().y == Cursor::getPos().y) // if true, this is the enemy at the cursor position
+                    {
+                        stringstream eHealth;
+                        eHealth << Player::getRoom().enemies[i].getHealth();
+                        stringstream ePower;
+                        ePower << Player::getRoom().enemies[i].getPower();
+                        stringstream eDefense;
+                        eDefense << Player::getRoom().enemies[i].getDefense();
+                        
+                        outputString += "Enemy \n";
+                        outputString += "Health: "+ eHealth.str() + "\n";
+                        outputString += "Power: " + ePower.str() + "\n";
+                        outputString += "Defense: " + eDefense.str() + "\n";
+                    }
                 }
-            }
-            break;
-        // ADD MORE CASES HERE!
-        default:
-            break;
+                break;
+            case WALL:
+                outputString += "Wall \n";
+                break;
+            case DOOR:
+                outputString += "Door \n";
+            case STAIRS:
+                outputString += "Stairs to next floor \n";
+                break;
+            default:
+                break;
         }
     }
-
+    
     cout << outputString;
 }
 

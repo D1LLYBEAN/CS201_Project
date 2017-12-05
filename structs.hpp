@@ -113,7 +113,7 @@ public:
     {
         _position = newPos;
     }
-    double sgetHealth()
+    double getHealth()
     {
         return _health;
     }
@@ -128,6 +128,10 @@ public:
     void setPower(double newPower)
     {
         _power = newPower;
+    }
+    double getDefense()
+    {
+        return _defense;
     }
     void setDefense(double newDefense)
     {
