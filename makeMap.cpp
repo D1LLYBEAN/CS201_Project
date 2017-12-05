@@ -80,6 +80,142 @@ void showRoom(vector<vector<unsigned char>> printRoom)
     cout << string(2*(MAPSIZE+1)-1,WALL) << std::endl;
 }
 
+void printFloor(Floor f)
+{
+	//does not include left side wall...
+	//cout << string((FLOORSIZE*MAPSIZE+FLOORSIZE),(char)WALL) << std::endl;
+	for(int fY = FLOORSIZE-1; fY >= 0; fY--) //increment floor y
+	{
+		for(int rY = MAPSIZE-1; rY >= 0; rY--) //increment room y
+		{
+			for(int fX = 0; fX < FLOORSIZE; fX++) //increment floor x
+			{
+				for(int rX = 0; rX < MAPSIZE; rX++) //increment room x
+				{
+					cout << f.rooms[fX][fY].grid[rX][rY];
+				}
+				//cout << (char)WALL;
+				//cout << "TEST ME:\n";
+			}
+			cout << std:: endl;
+		}
+		//cout << string((FLOORSIZE*MAPSIZE+FLOORSIZE),(char)WALL) << std::endl;
+	}
+	cout << std:: endl;
+}
+
+
+void makeRoom(Room & r)
+{
+	//This is mostly just a test to see if it works
+	//cout << "\nMake a Room\n";
+
+    // reset 2D grid and flood vectors to base value
+    r.grid.clear();
+    r.flood.clear();
+    r.grid.resize(MAPSIZE,vector<unsigned char>(MAPSIZE,WALL));
+    r.flood.resize(MAPSIZE,vector<short>(MAPSIZE,-1));
+    // initialize start and end positions
+    for(Door d : r.doors)
+    {
+        r.grid[d.pos.x][d.pos.y] = PATH;
+    }
+
+    // create a vector of all grid positions
+    vector<Position> posDeck;
+    for (int i=0; i<MAPSIZE; i++)
+    {
+        for(int j=0; j<MAPSIZE; j++)
+        {
+            posDeck.push_back({i,j});
+        }
+    }
+
+    // randomly replace walls with paths, one grid space at a time
+    // use flood() to determine when end position can be reached from start
+    bool keepFlooding = true;
+    while (keepFlooding)                           // check if end position can be reached from start position
+    {
+        keepFlooding = false;
+        for(Door d : r.doors)
+        {
+            if(r.flood[d.pos.x][d.pos.y] == -1)
+            {
+                keepFlooding = true;
+            }
+        }
+        int rint = (int)(std::rand() * posDeck.size() / RAND_MAX);  // random int represents random grid space
+        r.grid[posDeck[rint].x][posDeck[rint].y] = PATH;            // replace wall at random grid space with path
+        posDeck.erase(posDeck.begin() + rint);                      // remove selected grid space from possible future selection
+        flood({MAPSIZE/2,MAPSIZE/2}, r);                                             // flood from start position
+    }
+
+    // Place Entrance and Exit spaces at respective positions
+    for(Door d : r.doors)
+    {
+        r.grid[d.pos.x][d.pos.y] = DOOR;
+    }
+
+    // clean up unreachable grid spaces
+    for (int i=0; i<MAPSIZE; i++)
+    {
+        for(int j=0; j<MAPSIZE; j++)
+        {
+            if(r.flood[i][j] == -1)
+            {
+                r.grid[i][j] = WALL;
+            }
+        }
+    }
+    spawnEnemies(r,1);
+}
+
+void makeFloor(Position entr, Position exit, Floor & f)
+{
+    f.rooms.clear();
+    Room emptyRoom = {}; // feckn whatever dude
+    f.rooms.resize(FLOORSIZE,vector<Room>(FLOORSIZE,emptyRoom));
+
+	srand(time(NULL));
+	//needs to generate the "maze" and hand each makeroom the entrance and exit positions
+
+	for (int i=0; i <FLOORSIZE; i++)
+    {
+        for(int j=0; j<FLOORSIZE; j++)
+        {
+            if (i > 0)
+            {
+                Door tempDoor;
+                tempDoor.nextRoom = {i-1,j};
+                tempDoor.pos = {0,MAPSIZE/2};
+                f.rooms[i][j].doors.push_back(tempDoor);
+            }
+            if (i < FLOORSIZE-1)
+            {
+                Door tempDoor;
+                tempDoor.nextRoom = {i+1,j};
+                tempDoor.pos = {MAPSIZE-1,MAPSIZE/2};
+                f.rooms[i][j].doors.push_back(tempDoor);
+            }
+            if (j > 0)
+            {
+                Door tempDoor;
+                tempDoor.nextRoom = {i,j-1};
+                tempDoor.pos = {MAPSIZE/2,0};
+                f.rooms[i][j].doors.push_back(tempDoor);
+            }
+            if (j < FLOORSIZE-1)
+            {
+                Door tempDoor;
+                tempDoor.nextRoom = {i,j+1};
+                tempDoor.pos = {MAPSIZE/2,MAPSIZE-1};
+                f.rooms[i][j].doors.push_back(tempDoor);
+            }
+            makeRoom(f.rooms[i][j]);
+        }
+    }
+}
+
 //void makeRoom(Position entr, Position exit, Room & r)
 //{
 //	//This is mostly just a test to see if it works
@@ -208,29 +344,7 @@ void showRoom(vector<vector<unsigned char>> printRoom)
 //}
 
 
-void printFloor(Floor f)
-{
-	//does not include left side wall...
-	//cout << string((FLOORSIZE*MAPSIZE+FLOORSIZE),(char)WALL) << std::endl;
-	for(int fY = FLOORSIZE-1; fY >= 0; fY--) //increment floor y
-	{
-		for(int rY = MAPSIZE-1; rY >= 0; rY--) //increment room y
-		{
-			for(int fX = 0; fX < FLOORSIZE; fX++) //increment floor x
-			{
-				for(int rX = 0; rX < MAPSIZE; rX++) //increment room x
-				{
-					cout << f.rooms[fX][fY].grid[rX][rY];
-				}
-				//cout << (char)WALL;
-				//cout << "TEST ME:\n";
-			}
-			cout << std:: endl;
-		}
-		//cout << string((FLOORSIZE*MAPSIZE+FLOORSIZE),(char)WALL) << std::endl;
-	}
-	cout << std:: endl;
-}
+
 
 //void nextRoom(int dir)
 //{

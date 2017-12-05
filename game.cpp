@@ -29,7 +29,7 @@ bool startGame()
 {
     clearScreen();
     cout << "Loading.";
-    testMakeFloor({0,0},{MAPSIZE,MAPSIZE},currentFloor);
+    makeFloor({0,0},{MAPSIZE,MAPSIZE},currentFloor);
     cout << ".";
     Player::setRoom(currentFloor.rooms[0][0]);
     Cursor::setRoom(currentFloor.rooms[0][0]);
@@ -108,7 +108,7 @@ bool game()
         unsigned short key = getKey();
 
         //if (key == 'f') { testFlood(); continue;} // REMOVE THIS LATER!
-        //if (key == 'g') { generateRoom(); continue;} // REMOVE THIS LATER!
+        //if (key == 'g') { printFloor(Player::getFloor()); continue;} // REMOVE THIS LATER!
 
         if(key == '\\' || key == 0x001B){break;}
         else if (!Cursor::isEnabled())
@@ -122,7 +122,22 @@ bool game()
                 {
                     Player::setRoom(currentFloor.rooms[d.nextRoom.x][d.nextRoom.y]);
                     Cursor::setRoom(currentFloor.rooms[d.nextRoom.x][d.nextRoom.y]);
-                    Player::setPos({MAPSIZE/2,MAPSIZE/2});
+                    if(Player::getPos().y == MAPSIZE-1)//NORTH
+                    {
+                    	Player::setPos({d.pos.x,MAPSIZE-1-d.pos.y});
+					}
+					else if(Player::getPos().x == MAPSIZE-1)//EAST
+					{
+						Player::setPos({MAPSIZE-1-d.pos.x,d.pos.y});
+					}
+					else if(Player::getPos().y == 0)//SOUTH
+					{
+						Player::setPos({d.pos.x,d.pos.y+MAPSIZE-1});
+					}
+					else//WEST
+					{
+						Player::setPos({d.pos.x+MAPSIZE-1,d.pos.y});
+					}
                     Player::setRoomPos(d.nextRoom);
                     currentFloor.rooms[d.nextRoom.x][d.nextRoom.y].grid[Player::getPos().x][Player::getPos().y] = PLAYER;
                     break;

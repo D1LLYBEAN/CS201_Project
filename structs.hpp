@@ -46,13 +46,13 @@ class Player{
 public:
     static void reset();
     static void setRoom(Room & startRoom);
-    static void setFloor(Floor & startFloor); // need this for cursor too? why is cursor not a part of player...
+    static void setFloor(Floor & startFloor);
     static Position getPos();
     static void setPos(Position newPos);
     static Room getRoom();
     static void setRoomPos(Position);
     static Position getRoomPos();
-    static Floor getFloor(); // need this for cursor too? why is cursor not a part of player...
+    static Floor getFloor();
     static bool movechar(unsigned short dir);
     static void takeDamage(double damage);
     static double getHealth();
@@ -124,8 +124,6 @@ private:
 };
 
 
-
-
 struct Room{
     vector<vector<unsigned char>> grid;
     vector<vector<short>> flood;
@@ -134,9 +132,6 @@ struct Room{
     Position pos;
     //...
 };
-
-
-
 
 struct Floor{
 	vector< vector<Room> > rooms;
@@ -151,5 +146,6 @@ struct Door
     Position nextRoom;
 };
 
+bool isDoor(Position pos);
 
 #endif // STRUCTS_H

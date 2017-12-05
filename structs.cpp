@@ -6,6 +6,31 @@
 #include "intelligence.hpp"
 #include "graphics.hpp"
 
+bool isDoor(Position pos)
+{
+	Room currentRoom = Player::getRoom();
+	Position playerPos = Player::getPos();
+	auto doors = currentRoom.doors;
+	if(playerPos.x == doors[0].pos.x && playerPos.y == doors[0].pos.y)
+	{
+			return true;
+	}
+	else if(playerPos.x == doors[1].pos.x && playerPos.y == doors[1].pos.y)
+	{
+			return true;
+	}
+	else if(playerPos.x == doors[2].pos.x && playerPos.y == doors[2].pos.y)
+	{
+			return true;
+	}
+	else if(playerPos.x == doors[3].pos.x && playerPos.y == doors[3].pos.y)
+	{
+			return true;
+	}
+	else
+		return false;
+}
+
 // ---------- Player ---------- //
 
 double Player::_health = 100.0;
@@ -24,12 +49,12 @@ void Player::reset()
     _power = 50.0;
 }
 
-void Player::setFloor(Floor & startFloor) // may need this for cursor too...
+void Player::setFloor(Floor & startFloor)
 {
 	_floor = &startFloor;
 }
 
-Floor Player::getFloor() // same here - liam
+Floor Player::getFloor()
 {
     return (*_floor);
 }
@@ -71,17 +96,34 @@ bool Player::movechar(unsigned short dir)
         case 0xE048: //[UP ARROW]
             if(_position.y < MAPSIZE-1 && ((*_room).grid[_position.x][_position.y+1] == PATH || (*_room).grid[_position.x][_position.y+1] == DOOR))
             {
-                (*_room).grid[_position.x][_position.y] = PATH;
+            	if(isDoor(_position))//its a door
+	            {
+	            	//replace my pos with a door
+	            	(*_room).grid[_position.x][_position.y] = DOOR;
+				}
+				else//is just path
+				{
+					(*_room).grid[_position.x][_position.y] = PATH;
+				}
                 _position.y++;
                 (*_room).grid[_position.x][_position.y] = PLAYER;
             }
+            
             else{return false;}
             break;
         case 's': //South
         case 0xE050: // [DOWN ARROW]
             if(_position.y > 0 && ((*_room).grid[_position.x][_position.y-1] == PATH || (*_room).grid[_position.x][_position.y-1] == DOOR))
             {
-                (*_room).grid[_position.x][_position.y] = PATH;
+                if(isDoor(_position))//its a door
+	            {
+	            	//replace my pos with a door
+	            	(*_room).grid[_position.x][_position.y] = DOOR;
+				}
+				else//is just path
+				{
+					(*_room).grid[_position.x][_position.y] = PATH;
+				}
                 _position.y--;
                 (*_room).grid[_position.x][_position.y] = PLAYER;
             }
@@ -91,7 +133,15 @@ bool Player::movechar(unsigned short dir)
         case 0xE04D: // [RIGHT ARROW]
             if(_position.x < MAPSIZE-1 && ((*_room).grid[_position.x+1][_position.y] == PATH || (*_room).grid[_position.x+1][_position.y] == DOOR))
             {
-                (*_room).grid[_position.x][_position.y] = PATH;
+                if(isDoor(_position))//its a door
+	            {
+	            	//replace my pos with a door
+	            	(*_room).grid[_position.x][_position.y] = DOOR;
+				}
+				else//is just path
+				{
+					(*_room).grid[_position.x][_position.y] = PATH;
+				}
                 _position.x++;
                 (*_room).grid[_position.x][_position.y] = PLAYER;
             }
@@ -101,7 +151,15 @@ bool Player::movechar(unsigned short dir)
         case 0xE04B: // [LEFT ARROW]
             if(_position.x > 0 && ((*_room).grid[_position.x-1][_position.y] == PATH || (*_room).grid[_position.x-1][_position.y] == DOOR))
             {
-                (*_room).grid[_position.x][_position.y] = PATH;
+                if(isDoor(_position))//its a door
+	            {
+	            	//replace my pos with a door
+	            	(*_room).grid[_position.x][_position.y] = DOOR;
+				}
+				else//is just path
+				{
+					(*_room).grid[_position.x][_position.y] = PATH;
+				}
                 _position.x--;
                 (*_room).grid[_position.x][_position.y] = PLAYER;
             }
