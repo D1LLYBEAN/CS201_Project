@@ -152,8 +152,8 @@ private:
 
 
 struct Room{
-    vector<vector<unsigned char>> grid;
-    vector<vector<short>> flood;
+    vector< vector < unsigned char > > grid;
+    vector<vector<short> > flood;
     vector<Door> doors;
     vector<Enemy> enemies;
     Position pos;
