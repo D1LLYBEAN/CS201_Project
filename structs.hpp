@@ -25,7 +25,7 @@ const char DOOR = 'D';
 const char STAIRS = '@';
 const char PLAYER = 'i';
 const char CURSOR = '*';
-const char ENEMY = 'f';
+const char ENEMY = 'e';
 const char BULLET = '+';
 
 struct Position;
