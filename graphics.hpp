@@ -12,5 +12,5 @@
 
 #include <vector>
 void startScreen();
-void printRoom(std::vector<std::vector<unsigned char>> pRoom);
+void printRoom(std::vector<std::vector<unsigned char> > pRoom);
 void clearScreen();

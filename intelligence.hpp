@@ -19,6 +19,6 @@ void enemyTurn(Room & r);
 void spawnEnemies(Room & r, int eCount);
 void flood(Position pPos, Room & room);
 void testFlood();
-void testPrintFlood(std::vector<std::vector<short>> printMap);
+void testPrintFlood(std::vector<std::vector<short> > printMap);
 void testmakeRoom(Position entr, Position exit, Room & r);
 void testMakeFloor(Position entr, Position exit, Floor & f);
