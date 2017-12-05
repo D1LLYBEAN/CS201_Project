@@ -33,20 +33,25 @@ bool isDoor(Position pos)
 
 // ---------- Player ---------- //
 
+double Player::_maxHealth = 100.0;
 double Player::_health = 100.0;
 Position Player::_position = {MAPSIZE/2,MAPSIZE/2};
 Position Player::_roomPosition = {0,0};
 Room * Player::_room = nullptr;
 Floor * Player::_floor = nullptr;
-double Player::_power = 50.0;
+double Player::_power = 10.0;
+double Player::_defense = 1.0;
 
 void Player::reset()
 {
+    _maxHealth = 100.0;
     _health = 100.0;
     _position = {MAPSIZE/2,MAPSIZE/2};
+    _roomPosition = {0,0};
     _room = nullptr;
     _floor = nullptr;
-    _power = 50.0;
+    _power = 10.0;
+    _defense = 1.0;
 }
 
 void Player::setFloor(Floor & startFloor)
@@ -94,7 +99,7 @@ bool Player::movechar(unsigned short dir)
     switch(dir){
         case 'w': // North
         case 0xE048: //[UP ARROW]
-            if(_position.y < MAPSIZE-1 && ((*_room).grid[_position.x][_position.y+1] == PATH || (*_room).grid[_position.x][_position.y+1] == DOOR))
+            if(_position.y < MAPSIZE-1 && ((*_room).grid[_position.x][_position.y+1] == PATH || (*_room).grid[_position.x][_position.y+1] == DOOR || (*_room).grid[_position.x][_position.y+1] == STAIRS))
             {
             	if(isDoor(_position))//its a door
 	            {
@@ -108,12 +113,12 @@ bool Player::movechar(unsigned short dir)
                 _position.y++;
                 (*_room).grid[_position.x][_position.y] = PLAYER;
             }
-            
+
             else{return false;}
             break;
         case 's': //South
         case 0xE050: // [DOWN ARROW]
-            if(_position.y > 0 && ((*_room).grid[_position.x][_position.y-1] == PATH || (*_room).grid[_position.x][_position.y-1] == DOOR))
+            if(_position.y > 0 && ((*_room).grid[_position.x][_position.y-1] == PATH || (*_room).grid[_position.x][_position.y-1] == DOOR || (*_room).grid[_position.x][_position.y-1] == STAIRS))
             {
                 if(isDoor(_position))//its a door
 	            {
@@ -131,7 +136,7 @@ bool Player::movechar(unsigned short dir)
             break;
         case 'd': //East
         case 0xE04D: // [RIGHT ARROW]
-            if(_position.x < MAPSIZE-1 && ((*_room).grid[_position.x+1][_position.y] == PATH || (*_room).grid[_position.x+1][_position.y] == DOOR))
+            if(_position.x < MAPSIZE-1 && ((*_room).grid[_position.x+1][_position.y] == PATH || (*_room).grid[_position.x+1][_position.y] == DOOR || (*_room).grid[_position.x+1][_position.y] == STAIRS))
             {
                 if(isDoor(_position))//its a door
 	            {
@@ -149,7 +154,7 @@ bool Player::movechar(unsigned short dir)
             break;
         case 'a': //West
         case 0xE04B: // [LEFT ARROW]
-            if(_position.x > 0 && ((*_room).grid[_position.x-1][_position.y] == PATH || (*_room).grid[_position.x-1][_position.y] == DOOR))
+            if(_position.x > 0 && ((*_room).grid[_position.x-1][_position.y] == PATH || (*_room).grid[_position.x-1][_position.y] == DOOR || (*_room).grid[_position.x-1][_position.y] == STAIRS))
             {
                 if(isDoor(_position))//its a door
 	            {
@@ -171,7 +176,7 @@ bool Player::movechar(unsigned short dir)
 
 void Player::takeDamage(double damage)
 {
-    _health -= damage;
+    _health -= damage / _defense;
 }
 
 double Player::getHealth()
@@ -179,9 +184,39 @@ double Player::getHealth()
     return _health;
 }
 
+void Player::setHealth(double newHealth)
+{
+    _health = newHealth;
+}
+
+double Player::getMaxHealth()
+{
+    return _maxHealth;
+}
+
+void Player::setMaxHealth(double newMaxHealth)
+{
+    _maxHealth = newMaxHealth;
+}
+
 double Player::getPower()
 {
     return _power;
+}
+
+void Player::setPower(double newPower)
+{
+    _power = newPower;
+}
+
+double Player::getDefense()
+{
+    return _defense;
+}
+
+void Player::setDefense(double newDefense)
+{
+    _defense = newDefense;
 }
 
 // ---------- Cursor ---------- //
@@ -288,6 +323,7 @@ void Cursor::attack()
     double t = 0.0;
     for(int i=0; i <= length; i++)
     {
+        if(length <= 0){break;}
         double tp1 = double(i)/length; // t plus 1
         if ((*_roompoint).grid[round(x1 * (1.0-tp1) + x2 * tp1)][round(y1 * (1.0-t) + y2 * t)] == WALL && (*_roompoint).grid[round(x1 * (1.0-t) + x2 * t)][round(y1 * (1.0-tp1) + y2 * tp1)] == WALL)
         {

@@ -24,8 +24,8 @@ const char WALL = '#';
 const char DOOR = '@';
 const char STAIRS = 'O';
 const char PLAYER = 'i';
-const char CURSOR = 'X';
-const char ENEMY = '&';
+const char CURSOR = '*';
+const char ENEMY = 'f';
 const char BULLET = '+';
 
 struct Position;
@@ -56,14 +56,22 @@ public:
     static bool movechar(unsigned short dir);
     static void takeDamage(double damage);
     static double getHealth();
+    static void setHealth(double newHealth);
+    static double getMaxHealth();
+    static void setMaxHealth(double newHealth);
     static double getPower();
+    static void setPower(double newPower);
+    static double getDefense();
+    static void setDefense(double newDefense);
 private:
+    static double _maxHealth;
     static double _health;
     static Position _position;
     static Position _roomPosition;
     static Room * _room;
     static Floor * _floor;
     static double _power;
+    static double _defense;
 };
 
 
@@ -92,9 +100,10 @@ class Enemy{ //turn to class, make identical to player for now
 public:
     Enemy()
     {
-        _health = 100.0;
         _position = {0,0};
-        _power = 10.0;
+        _health = 10.0;
+        _power = 5.0;
+        _defense = 1.0;
     }
     Position getPos()
     {
@@ -104,23 +113,37 @@ public:
     {
         _position = newPos;
     }
-    bool takeDamage(double damage)
+    void setHealth(double newHealth)
     {
-        _health -= damage;
-        if(_health <= 0.0)
-        {
-            return false;
-        }
-        return true;
+        _health = newHealth;
     }
     double getPower()
     {
         return _power;
     }
+    void setPower(double newPower)
+    {
+        _power = newPower;
+    }
+    void setDefense(double newDefense)
+    {
+        _defense = newDefense;
+    }
+    bool takeDamage(double damage)
+    {
+        _health -= damage / _defense;
+        if(_health <= 0.0)
+        {
+            Player::setPower(Player::getPower() + 1.0);
+            return false;
+        }
+        return true;
+    }
 private:
     double _health;
     Position _position;
     double _power;
+    double _defense;
 };
 
 

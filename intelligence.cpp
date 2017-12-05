@@ -89,7 +89,7 @@ void enemyLogic(Enemy & e, Room & r)
                 break;
         }
     }
-    else
+    else if (r.flood[e.getPos().x][e.getPos().y] == 1) // to prevent glitches when enemies are on flood values "-1"
     {
         cout << "ATTACK @ (" << e.getPos().x << "," << e.getPos().y << ")\n";
         Player::takeDamage(e.getPower());
@@ -127,6 +127,9 @@ void spawnEnemies(Room & r, int eCount)
         Enemy tempEnemy;
         int rint = (int)(std::rand() * posDeck.size() / RAND_MAX);  // random int represents random (path) grid space
         tempEnemy.setPos({posDeck[rint].x,posDeck[rint].y});          // set enemy position to random (path) grid space position
+        tempEnemy.setHealth(10.0 * (currentFloor.depth+1));
+        tempEnemy.setPower(5.0 * (currentFloor.depth+1));
+        tempEnemy.setDefense(1.0 * (currentFloor.depth+1));
         r.grid[posDeck[rint].x][posDeck[rint].y] = ENEMY;           // replace path at random grid space with enemy
         posDeck.erase(posDeck.begin() + rint);                      // remove selected (path) grid space from possible future selection
         r.enemies.push_back(tempEnemy);                             // add enemy to room.enemies vector

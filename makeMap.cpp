@@ -214,6 +214,20 @@ void makeFloor(Position entr, Position exit, Floor & f)
             makeRoom(f.rooms[i][j]);
         }
     }
+
+    while(true)
+    {
+        //int r1 = std::rand() * (FLOORSIZE-1) / RAND_MAX;
+        int r1 = FLOORSIZE - 1;
+        int r2 = FLOORSIZE - 1;
+        int g1 = MAPSIZE/2;
+        int g2 = MAPSIZE/2;
+        if(f.rooms[r1][r2].grid[g1][g2] == PATH || 1)
+        {
+            f.rooms[r1][r2].grid[g1][g2] = STAIRS;
+            break;
+        }
+    }
 }
 
 //void makeRoom(Position entr, Position exit, Room & r)

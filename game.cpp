@@ -115,11 +115,18 @@ bool game()
         {
             if(!playerAction(key)) {continue;}
             Room currentRoom = Player::getRoom();
-            if(currentRoom.grid[Player::getPos().x][Player::getPos().y] == STAIRS) {return true;} // need to finish stair use
+            if(currentRoom.grid[Player::getPos().x][Player::getPos().y] == STAIRS)  // need to finish stair use
+            {
+                Player::setMaxHealth(Player::getMaxHealth() + 1.0);
+                Player::setDefense(Player::getDefense() + 1.0);
+                Player::setHealth(Player::getMaxHealth());
+                return true;
+            }
             for(Door d : currentRoom.doors)
             {
                 if(Player::getPos().x == d.pos.x && Player::getPos().y == d.pos.y)
                 {
+                    currentFloor.rooms[Player::getRoomPos().x][Player::getRoomPos().y].grid[d.pos.x][d.pos.y] = DOOR;
                     Player::setRoom(currentFloor.rooms[d.nextRoom.x][d.nextRoom.y]);
                     Cursor::setRoom(currentFloor.rooms[d.nextRoom.x][d.nextRoom.y]);
                     if(Player::getPos().y == MAPSIZE-1)//NORTH
