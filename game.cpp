@@ -115,7 +115,7 @@ bool game()
         {
             if(!playerAction(key)) {continue;}
             Room currentRoom = Player::getRoom();
-            if(currentRoom.grid[Player::getPos().x][Player::getPos().y] == STAIRS)  // need to finish stair use
+            if(Player::getPos().x == currentRoom.stairs.x && Player::getPos().y == currentRoom.stairs.y)  // need to finish stair use
             {
                 Player::setMaxHealth(Player::getMaxHealth() + 1.0);
                 Player::setDefense(Player::getDefense() + 1.0);

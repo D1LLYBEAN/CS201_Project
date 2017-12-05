@@ -153,6 +153,7 @@ struct Room{
     vector<Door> doors;
     vector<Enemy> enemies;
     Position pos;
+    Position stairs;
     //...
 };
 

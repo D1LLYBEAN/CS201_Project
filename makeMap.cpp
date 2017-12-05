@@ -119,6 +119,54 @@ void makeRoom(Room & r)
     for(Door d : r.doors)
     {
         r.grid[d.pos.x][d.pos.y] = PATH;
+        if(d.pos.x > 0)
+        {
+            r.grid[d.pos.x-1][d.pos.y] = PATH;
+            if(d.pos.y > 0)
+            {
+                r.grid[d.pos.x-1][d.pos.y-1] = PATH;
+            }
+            if(d.pos.y < MAPSIZE-1)
+            {
+                r.grid[d.pos.x-1][d.pos.y+1] = PATH;
+            }
+        }
+        if(d.pos.x < MAPSIZE-1)
+        {
+            r.grid[d.pos.x+1][d.pos.y] = PATH;
+            if(d.pos.y > 0)
+            {
+                r.grid[d.pos.x+1][d.pos.y-1] = PATH;
+            }
+            if(d.pos.y < MAPSIZE-1)
+            {
+                r.grid[d.pos.x+1][d.pos.y+1] = PATH;
+            }
+        }
+        if(d.pos.y > 0)
+        {
+            r.grid[d.pos.x][d.pos.y-1] = PATH;
+            if(d.pos.x > 0)
+            {
+                r.grid[d.pos.x-1][d.pos.y-1] = PATH;
+            }
+            if(d.pos.x < MAPSIZE-1)
+            {
+                r.grid[d.pos.x+1][d.pos.y-1] = PATH;
+            }
+        }
+        if(d.pos.y < MAPSIZE-1)
+        {
+            r.grid[d.pos.x][d.pos.y+1] = PATH;
+            if(d.pos.x > 0)
+            {
+                r.grid[d.pos.x-1][d.pos.y+1] = PATH;
+            }
+            if(d.pos.x < MAPSIZE-1)
+            {
+                r.grid[d.pos.x+1][d.pos.y+1] = PATH;
+            }
+        }
     }
 
     // create a vector of all grid positions
@@ -167,7 +215,7 @@ void makeRoom(Room & r)
             }
         }
     }
-    spawnEnemies(r,1);
+    spawnEnemies(r,currentFloor.depth+1);
 }
 
 void makeFloor(Position entr, Position exit, Floor & f)
@@ -212,6 +260,7 @@ void makeFloor(Position entr, Position exit, Floor & f)
                 f.rooms[i][j].doors.push_back(tempDoor);
             }
             makeRoom(f.rooms[i][j]);
+            f.rooms[i][j].stairs = {-1,-1};
         }
     }
 
@@ -225,6 +274,7 @@ void makeFloor(Position entr, Position exit, Floor & f)
         if(f.rooms[r1][r2].grid[g1][g2] == PATH || 1)
         {
             f.rooms[r1][r2].grid[g1][g2] = STAIRS;
+            f.rooms[r1][r2].stairs = {g1,g2};
             break;
         }
     }
