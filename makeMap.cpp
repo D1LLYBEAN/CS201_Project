@@ -275,6 +275,54 @@ void makeFloor(Position entr, Position exit, Floor & f)
         {
             f.rooms[r1][r2].grid[g1][g2] = STAIRS;
             f.rooms[r1][r2].stairs = {g1,g2};
+            if(g1 > 0)
+            {
+                f.rooms[r1][r2].grid[g1-1][g2] = PATH;
+                if(g2 > 0)
+                {
+                    f.rooms[r1][r2].grid[g1-1][g2-1] = PATH;
+                }
+                if(g2 < MAPSIZE-1)
+                {
+                    f.rooms[r1][r2].grid[g1-1][g2+1] = PATH;
+                }
+            }
+            if(g1 < MAPSIZE-1)
+            {
+                f.rooms[r1][r2].grid[g1+1][g2] = PATH;
+                if(g2 > 0)
+                {
+                    f.rooms[r1][r2].grid[g1+1][g2-1] = PATH;
+                }
+                if(g2 < MAPSIZE-1)
+                {
+                    f.rooms[r1][r2].grid[g1+1][g2+1] = PATH;
+                }
+            }
+            if(g2 > 0)
+            {
+                f.rooms[r1][r2].grid[g1][g2-1] = PATH;
+                if(g1 > 0)
+                {
+                    f.rooms[r1][r2].grid[g1-1][g2-1] = PATH;
+                }
+                if(g1 < MAPSIZE-1)
+                {
+                    f.rooms[r1][r2].grid[g1+1][g2-1] = PATH;
+                }
+            }
+            if(g2 < MAPSIZE-1)
+            {
+                f.rooms[r1][r2].grid[g1][g2+1] = PATH;
+                if(g1 > 0)
+                {
+                    f.rooms[r1][r2].grid[g1-1][g2+1] = PATH;
+                }
+                if(g1 < MAPSIZE-1)
+                {
+                    f.rooms[r1][r2].grid[g1+1][g2+1] = PATH;
+                }
+            }
             break;
         }
     }

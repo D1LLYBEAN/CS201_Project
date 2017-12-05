@@ -20,9 +20,9 @@ using std::vector;
 
 const char MAPSIZE = 16;
 const char PATH = ' ';
-const char WALL = '#';
-const char DOOR = '@';
-const char STAIRS = 'O';
+const char WALL = 'W';
+const char DOOR = 'D';
+const char STAIRS = '@';
 const char PLAYER = 'i';
 const char CURSOR = '*';
 const char ENEMY = 'f';
@@ -112,6 +112,10 @@ public:
     void setPos(Position newPos)
     {
         _position = newPos;
+    }
+    double sgetHealth()
+    {
+        return _health;
     }
     void setHealth(double newHealth)
     {

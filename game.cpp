@@ -34,6 +34,7 @@ bool startGame()
     Player::setRoom(currentFloor.rooms[0][0]);
     Cursor::setRoom(currentFloor.rooms[0][0]);
     Player::setPos({MAPSIZE/2,MAPSIZE/2});
+    Player::setRoomPos({0,0});
     currentFloor.rooms[0][0].grid[Player::getPos().x][Player::getPos().y] = PLAYER;
     cout << ".";
     clearScreen();
@@ -117,9 +118,10 @@ bool game()
             Room currentRoom = Player::getRoom();
             if(Player::getPos().x == currentRoom.stairs.x && Player::getPos().y == currentRoom.stairs.y)  // need to finish stair use
             {
-                Player::setMaxHealth(Player::getMaxHealth() + 1.0);
-                Player::setDefense(Player::getDefense() + 1.0);
+                Player::setMaxHealth(Player::getMaxHealth() + 5.0);
+                Player::setDefense(Player::getDefense() + 0.5);
                 Player::setHealth(Player::getMaxHealth());
+                currentFloor.depth++;
                 return true;
             }
             for(Door d : currentRoom.doors)

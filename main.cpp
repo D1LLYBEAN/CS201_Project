@@ -41,13 +41,16 @@ int main()
 
     while(true)
     {
-        Player::reset();
         if(startGame()){continue;} // Next Level
         clearScreen();
         cout << "Game Over\n"; // gameOver()
         cout << "\nPlay Again? (Y/N)\n";
         short key = getKey();
-        if(key == 'y') {continue;}
+        if(key == 'y')
+        {
+            Player::reset();
+            continue;
+        }
         else {break;}
     }
 
