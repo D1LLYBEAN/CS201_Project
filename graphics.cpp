@@ -30,10 +30,11 @@ void startScreen()
 {
     cout << "Font: Courier New (20 pt)\n";
     cout << "Terminal: Width = 80, Height = 40\n";
+    cout << "\tCreated by BEM_GAMES\n";
     string file_path = __FILE__;
     string dir_path = file_path.substr(0, file_path.rfind("\\"));
     string startScreenFile = dir_path + "\\StartScreen.txt";
-    cout << startScreenFile << endl;
+    //cout << startScreenFile << endl;
     // This should be moved to it's own graphics.cpp/.hpp files!
     ifstream iFile(startScreenFile); // needs to be in local project file?
     string lines;
