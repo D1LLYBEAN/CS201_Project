@@ -62,13 +62,10 @@ void printRoom(vector<vector<unsigned char>> pRoom)
     pHealth << Player::getHealth();
     stringstream pMaxHealth;
     pMaxHealth << Player::getMaxHealth();
+    stringstream pPower;
+    pPower << Player::getPower();
     stringstream pDefense;
     pDefense << Player::getDefense();
-
-
-
-
-
 
     string outputString = "";
     outputString += string(MAPSIZE+2,WALL) + "\n" + string(1,WALL);
@@ -82,14 +79,13 @@ void printRoom(vector<vector<unsigned char>> pRoom)
     }
     outputString += string(MAPSIZE+1,WALL) + "\n";
 //    outputString += "HEALTH: " + pHealth.str() + "\n";
-    outputString += "Player: \n";
-    outputString += "Health: " + pHealth.str() + "\n";
-    outputString += "Max Health: " + pMaxHealth.str() + "\n";
+    outputString += "Health: " + pHealth.str() + "/" + pMaxHealth.str() + "\n";
+    outputString += "Power : " + pPower.str() + "\n";
     outputString += "Defense : " + pDefense.str() + "\n";
 
     if(Cursor::isEnabled())
     {
-        outputString += "Cursor: ";
+        outputString += "\nCursor: ";
         switch(Player::getRoom().grid[Cursor::getPos().x][Cursor::getPos().y]) // get character on grid at cursor position
         {
             case PLAYER:
@@ -115,19 +111,18 @@ void printRoom(vector<vector<unsigned char>> pRoom)
                 }
                 break;
             case WALL:
-                outputString += "Wall \n";
+                outputString += "Wall\n";
                 break;
             case DOOR:
-                outputString += "Door \n";
+                outputString += "Door\n";
                 break;
             case STAIRS:
-                outputString += "Hole to next floor \n";
+                outputString += "Exit to next floor\n";
                 break;
             default:
                 break;
         }
     }
-
     cout << outputString;
 }
 
