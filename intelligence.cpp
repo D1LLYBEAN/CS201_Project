@@ -31,10 +31,8 @@ const int FLOORSIZE = 8;
 
 void enemyLogic(Enemy & e, Room & r)
 {
-    cout << "enemyLogic @ (" << e.getPos().x << "," << e.getPos().y << ")\n";
     if(r.flood[e.getPos().x][e.getPos().y] > 1)
     {
-        cout << "MOVE @ (" << e.getPos().x << "," << e.getPos().y << ")\n";
         short lowestFlood = r.flood[e.getPos().x][e.getPos().y];
         unsigned short moveDir;
         if(e.getPos().y < MAPSIZE-1 && r.grid[e.getPos().x][e.getPos().y+1] == PATH && r.flood[e.getPos().x][e.getPos().y+1] < lowestFlood) // UP
